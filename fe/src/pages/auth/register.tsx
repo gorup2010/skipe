@@ -4,8 +4,8 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useRegister } from '@/hooks/use-register';
-import { LoginSpinner } from '@/components/spinner';
-import { TextInput } from '@/components/input';
+import { LoginSpinner } from '@/components/ui/spinner';
+import { TextInput } from '@/components/ui/input';
 import { registerInputSchema, RegisterInput } from "@/apis/auth";
 
 

@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { TextInput } from "@/components/input";
-import { LoginSpinner } from "@/components/spinner";
+import { TextInput } from "@/components/ui/input";
+import { LoginSpinner } from "@/components/ui/spinner";
 import { useLogin } from "@/hooks/use-login";
 import { loginInputSchema, LoginInput } from "@/apis/auth";
 
