@@ -1,9 +1,9 @@
 import { Avatar } from "@/components/ui/image";
 import { HamburgerMenu } from "@/components/ui/button";
 import { FC, memo, useState } from "react";
-import { BookUser, MessageSquareMore, Phone } from "lucide-react";
+import { BookUser, MessageSquareMore, Paperclip, Phone, SendHorizontal } from "lucide-react";
 import { IconWrapper } from "@/components/ui/image/icon-wrapper";
-import { MessageCard } from "@/components/ui/message";
+import { ChatCardList, UserCardList } from "@/components/list";
 
 const Chat: FC = memo(() => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -24,7 +24,7 @@ const Chat: FC = memo(() => {
         <IconWrapper icon={BookUser} placeholder="Contacts" />
       </div>
       <hr />
-      <MessageCard id="1" username="Lau Hoi" lastMessage="Siuuu" lastDate={new Date()}/>
+      <UserCardList />
     </div>
   );
 
@@ -36,13 +36,44 @@ const Chat: FC = memo(() => {
       </div>
 
       {/* Mobile Hamburger Menu */}
-      <div className="md:hidden top-4 w-full bg-white flex flex-row">
+      <div className="md:hidden top-4 w-full flex flex-row">
         <HamburgerMenu />
         <Profile />
       </div>
 
       {/* Main Content */}
-      <div className="w-full h-full">b</div>
+      <div className="w-full md:w-3/4 h-full">
+        <div className="p-3">
+          <Profile />
+        </div>
+        <hr />
+        <ChatCardList />
+        <div className="w-full px-2 flex space-x-1">
+          <button
+            type="button"
+            className="flex items-center justify-center w-10 border-2 rounded-xl border-blue-300 "
+          >
+            <Paperclip color="#66B2FF"/>
+          </button>
+          <input
+            type="text"
+            id="text-field"
+            className="border focus:ring-gray-300 focus:outline-none border-blue-300 text-gray-700 text-sm rounded-lg ps-5 p-2.5 flex-1"
+            style={{ whiteSpace: "pre-wrap" }}
+            defaultValue=""
+            ref={null}
+            placeholder="Nội dung..."
+            disabled={false}
+            required
+          />
+          <button
+            type="button"
+            className="flex items-center justify-center w-10 border-2 rounded-xl border-blue-300 "
+          >
+            <SendHorizontal color="#66B2FF"/>
+          </button>
+        </div>
+      </div>
     </div>
   );
 });
