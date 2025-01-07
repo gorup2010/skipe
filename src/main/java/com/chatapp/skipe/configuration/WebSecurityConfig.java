@@ -17,18 +17,25 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.DelegatingFilterProxy;
+
+import lombok.AllArgsConstructor;
+
 import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
+@AllArgsConstructor
 public class WebSecurityConfig {
 
-    @Autowired
     private UserDetailsService userDetailsService;
+    private JwtAuthFilter jwtAuthFilter;
+
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -39,7 +46,8 @@ public class WebSecurityConfig {
     // CorsConfigurationSource corsConfigurationSource() {
     //     CorsConfiguration configuration = new CorsConfiguration();
     //     configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-    //     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"));         // Allow all HTTP methods
+    //     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS",
+    //             "DELETE", "PUT", "PATCH")); // Allow all HTTP methods
     //     configuration.setAllowedHeaders(Arrays.asList("*"));
     //     configuration.setExposedHeaders(Arrays.asList("*"));
     //     configuration.setAllowCredentials(true);
@@ -51,13 +59,17 @@ public class WebSecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .addFilterBefore(new CustomFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("login", "register", "logout-success")
+                        .requestMatchers("/login", "/register", "/logout-success")
                         .permitAll()
                         .anyRequest().authenticated())
-                .logout(logout -> logout.logoutSuccessUrl("/logout-success"))       // If logging out success, redirect to logout-success
+                .logout(logout -> logout.logoutSuccessUrl("/logout-success")) // If logging out success, redirect to
+                                                                              // logout-success
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .authenticationProvider(authenticationProvider())
                 .build();
     }
 
@@ -69,10 +81,10 @@ public class WebSecurityConfig {
         return authProvider;
     }
 
-    // @Bean
-    // public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-    //         throws Exception {
-    //     return authenticationConfiguration.getAuthenticationManager();
-    // }
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
 }
