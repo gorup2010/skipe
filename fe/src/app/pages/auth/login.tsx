@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TextInput } from "@/components/ui/input";
 import { LoginSpinner } from "@/components/ui/spinner";
 import { useLogin } from "@/hooks/use-login";
-import { loginInputSchema, LoginInput } from "@/apis/auth";
+import { loginInputSchema, LoginInput } from "@/lib/auth";
 
 const Login: FC = memo(() => {
   const {
@@ -36,8 +36,8 @@ const Login: FC = memo(() => {
               <div className="my-6">
                 <TextInput
                   type="text"
-                  placeholder={"Nhập email"}
-                  label="LoginInputname"
+                  placeholder={"Nhập username"}
+                  label="username"
                   register={register}
                   errors={errors}
                   validatedObject={{}}
@@ -60,7 +60,7 @@ const Login: FC = memo(() => {
               )}
               {/* <!-- Middle Content --> */}
               <div className="flex flex-col items-center justify-between mt-6 space-y-6  md:flex-row md:space-y-0 md:space-x-6">
-                <button className="w-full md:w-auto flex justify-center items-center p-4 space-x-2 font-sans font-bold text-white rounded-md px-9 bg-blue-500  shadow-cyan-100 hover:bg-opacity-90 shadow-sm hover:shadow-lg border transition hover:-translate-y-0.5 duration-150">
+                <button disabled={isPending} type="submit" className="w-full md:w-auto flex justify-center items-center p-4 space-x-2 font-sans font-bold text-white rounded-md px-9 bg-blue-500  shadow-cyan-100 hover:bg-opacity-90 shadow-sm hover:shadow-lg border transition hover:-translate-y-0.5 duration-150">
                   <span>{"Đăng nhập"}</span>
                   {isPending ? (
                     <LoginSpinner className="w-4 h-4" />

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -18,12 +19,19 @@ import lombok.extern.slf4j.Slf4j;
 public class ApiExceptionHandler {
     private static final String ERROR_LOG_FORMAT = "Error: URI: {}, ErrorCode: {}, Message: {}";
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception ex, WebRequest request) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleForbiddenEx(Exception ex, WebRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+
         return buildErrorResponse(status, ex.getMessage(), null, ex, request, status.value());
     }
+
+    // @ExceptionHandler(Exception.class)
+    // public ResponseEntity<ErrorResponse> handleException(Exception ex, WebRequest request) {
+    //     HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        
+    //     return buildErrorResponse(status, ex.getMessage(), null, ex, request, status.value());
+    // }
 
     private String getServletPath(WebRequest webRequest) {
         ServletWebRequest servletRequest = (ServletWebRequest) webRequest;

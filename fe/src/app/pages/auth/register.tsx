@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRegister } from '@/hooks/use-register';
 import { LoginSpinner } from '@/components/ui/spinner';
 import { TextInput } from '@/components/ui/input';
-import { registerInputSchema, RegisterInput } from "@/apis/auth";
+import { registerInputSchema, RegisterInput } from "@/lib/auth";
 
 
 const Register: FC = memo(() => {

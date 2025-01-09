@@ -2,9 +2,11 @@ package com.chatapp.skipe.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chatapp.skipe.dto.AuthResponse;
 import com.chatapp.skipe.dto.LoginRequest;
 import com.chatapp.skipe.dto.RegisterRequest;
 import com.chatapp.skipe.entity.User;
+import com.chatapp.skipe.exception.ForbiddenException;
 import com.chatapp.skipe.service.UserService;
 
 import lombok.AllArgsConstructor;
@@ -25,8 +27,8 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
-        return userService.verify(request);
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(userService.verify(request));
     }
 
     @PostMapping("/register")
@@ -34,7 +36,7 @@ public class AuthController {
         return ResponseEntity.ok(userService.register(request));
     }
 
-    @GetMapping("/test")
+    @PostMapping("/test")
     public String test(Principal principal) {
         return principal.toString();
     }

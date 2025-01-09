@@ -4,11 +4,11 @@ import { api } from "./api-client";
 import { AuthResponse } from "@/types/api";
 
 export const logout = (): Promise<void> => {
-  return api.post("/auth/logout");
+  return api.post("test");
 };
 
 export const loginInputSchema = z.object({
-  email: z.string().email("Email không hợp lệ").trim(),
+  username: z.string().min(6, 'Tên tài khoản phải có ít nhất 6 ký tự').regex(/^[A-Za-z][A-Za-z0-9_]{7,29}$/, 'Tên tài khoản chỉ được chứa chữ cái, số và dấu "_".').trim(),
   password: z.string().min(8, "Mật khẩu phải có ít nhất 8 kí tự").trim(),
 });
 
@@ -22,6 +22,7 @@ export const loginWithEmailAndPassword = (
 
 export const registerInputSchema = z
   .object({
+    username: z.string().min(6, 'Tên tài khoản phải có ít nhất 6 ký tự').regex(/^[A-Za-z][A-Za-z0-9_]{7,29}$/, 'Tên tài khoản chỉ được chứa chữ cái, số và dấu "_".').trim(),
     email: z.string().email("Email không hợp lệ").trim(),
     password: z.string().min(8, "Mật khẩu phải có ít nhất 8 kí tự").trim(),
     confirmedPassword: z
@@ -39,5 +40,23 @@ export type RegisterInput = z.infer<typeof registerInputSchema>;
 export const registerWithEmailAndPassword = (
   data: RegisterInput
 ): Promise<AuthResponse> => {
-  return api.post("/auth/register", data);
+  return api.post("register", data);
+};
+
+
+
+export const getAuth = (): AuthResponse | null => {
+  const storedData = localStorage.getItem('user');
+
+  if (!storedData) {
+    return null;
+  }
+
+  try {
+    const response: AuthResponse = JSON.parse(storedData);
+    return response;
+  } catch (error) {
+    console.error('Error parsing localStorage data:', error);
+    return null;
+  }
 };

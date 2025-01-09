@@ -1,9 +1,12 @@
 import { Avatar } from "@/components/ui/image";
 import { HamburgerMenu } from "@/components/ui/button";
 import { FC, memo, useState } from "react";
-import { BookUser, MessageSquareMore, Paperclip, Phone, SendHorizontal } from "lucide-react";
-import { IconWrapper } from "@/components/ui/image/icon-wrapper";
-import { ChatCardList, UserCardList } from "@/components/list";
+import {
+  Paperclip,
+  SendHorizontal,
+} from "lucide-react";
+import { ChatCardList } from "@/components/list";
+import { Sidebar } from "./sidebar";
 
 const Chat: FC = memo(() => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -12,19 +15,6 @@ const Chat: FC = memo(() => {
     <div className="flex items-center space-x-4">
       <Avatar placeholder="US" />
       <span className="text-xl font-semibold">Username</span>
-    </div>
-  );
-
-  const Sidebar = () => (
-    <div className="w-full h-full p-2 flex flex-col space-y-3">
-      <Profile />
-      <div className="grid grid-cols-3">
-        <IconWrapper icon={MessageSquareMore} placeholder="Chats" />
-        <IconWrapper icon={Phone} placeholder="Calls" />
-        <IconWrapper icon={BookUser} placeholder="Contacts" />
-      </div>
-      <hr />
-      <UserCardList />
     </div>
   );
 
@@ -43,8 +33,9 @@ const Chat: FC = memo(() => {
 
       {/* Main Content */}
       <div className="w-full md:w-3/4 h-full">
-        <div className="p-3">
-          <Profile />
+        <div className="p-3 flex items-center">
+          <Avatar placeholder="US" />
+          <span className="text-xl font-semibold ml-5">Username</span>
         </div>
         <hr />
         <ChatCardList />
@@ -53,7 +44,7 @@ const Chat: FC = memo(() => {
             type="button"
             className="flex items-center justify-center w-10 border-2 rounded-xl border-blue-300 "
           >
-            <Paperclip color="#66B2FF"/>
+            <Paperclip color="#66B2FF" />
           </button>
           <input
             type="text"
@@ -70,7 +61,7 @@ const Chat: FC = memo(() => {
             type="button"
             className="flex items-center justify-center w-10 border-2 rounded-xl border-blue-300 "
           >
-            <SendHorizontal color="#66B2FF"/>
+            <SendHorizontal color="#66B2FF" />
           </button>
         </div>
       </div>
