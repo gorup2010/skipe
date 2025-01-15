@@ -1,6 +1,5 @@
 import { logout } from "@/lib/auth";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export const useLogout = () => {
@@ -14,9 +13,8 @@ export const useLogout = () => {
         console.log("Error in useLogout " + error);
       },
       onSuccess: () => {
-        // localStorage.removeItem("user");
-        // delete api.defaults.headers.common["Authorization"];
-        // return navigate('/login');
+        localStorage.removeItem("user");
+        return navigate('/login');
       },
     });
     return {

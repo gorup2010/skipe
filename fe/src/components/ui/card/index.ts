@@ -1,2 +1,2 @@
-export * from "./user-card";
+export * from "./chatroom-card";
 export * from "./chat-card";

@@ -1,21 +1,27 @@
-import { UserCardList } from "@/components/list";
+import { ChatroomList } from "@/components/list";
+import { FriendButton } from "@/components/ui/button/friend-button";
 import { Avatar } from "@/components/ui/image";
-import { IconWrapper } from "@/components/ui/image/icon-wrapper";
+import { TabIconWrapper } from "@/components/ui/image/tab-icon-wrapper";
 import { useLogout } from "@/hooks/use-logout";
-import { BookUser, LogOut, MessageSquareMore, Phone } from "lucide-react";
+import { Tab } from "@/types/sidebar";
+import { BookUser, LogOut, MessageSquareMore } from "lucide-react";
 import { FC, useState } from "react";
 
 export const Sidebar: FC = () => {
+  // Log out button
   const [isHoverLogout, setIsHoverLogout] = useState(false);
   const logoutStyle = isHoverLogout ? "bg-blue-200" : "";
-
   const { logout, isPending } = useLogout();
+
+  // Tab
+  const [ tab, setTab ] = useState<Tab>(Tab.Chats);
 
   return (
     <div className="w-full h-full p-2 flex flex-col space-y-3">
       <div className="flex items-center w-full">
         <Avatar placeholder="US" />
         <span className="text-xl font-semibold ml-5">Username</span>
+        {/**Logout button */}
         <a
           className={
             "ml-auto flex items-center justify-center rounded-xl w-10 h-10 " +
@@ -32,13 +38,17 @@ export const Sidebar: FC = () => {
           <LogOut color="#4f4f4f" />
         </a>
       </div>
-      <div className="grid grid-cols-3">
-        <IconWrapper icon={MessageSquareMore} placeholder="Chats" />
-        <IconWrapper icon={Phone} placeholder="Calls" />
-        <IconWrapper icon={BookUser} placeholder="Contacts" />
+      {/**Tab */}
+      <div className="grid grid-cols-2">
+        <TabIconWrapper icon={MessageSquareMore} placeholderTab={Tab.Chats} onSelect={() => setTab(Tab.Chats)} currTab={tab}/>
+        <TabIconWrapper icon={BookUser} placeholderTab={Tab.Contacts} onSelect={() => setTab(Tab.Contacts)} currTab={tab}/>
       </div>
+      {/**Friend Button*/}
+      <FriendButton />
       <hr />
-      <UserCardList />
+      {
+        (tab === Tab.Chats) ? <ChatroomList /> : <></>
+      }
     </div>
   );
 };

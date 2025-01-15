@@ -1,2 +1,2 @@
 export * from "./chat-card-list";
-export * from "./user-card-list";
+export * from "./chatroom-list";

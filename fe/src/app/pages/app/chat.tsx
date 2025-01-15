@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { ChatCardList } from "@/components/list";
 import { Sidebar } from "./sidebar";
+import { FriendModal } from "@/components/modal";
 
 const Chat: FC = memo(() => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -65,6 +66,7 @@ const Chat: FC = memo(() => {
           </button>
         </div>
       </div>
+
     </div>
   );
 });

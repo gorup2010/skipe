@@ -1,10 +1,10 @@
 import { FC } from "react";
-import { UserCard } from "@/components/ui/card";
+import { ChatroomCard } from "@/components/ui/card";
 
-const UserCardList: FC = () => {
+const ChatroomList: FC = () => {
   return (
     <div className="">
-      <UserCard
+      <ChatroomCard
         id="1"
         username="Lau Hoi"
         lastMessage="Siuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"
@@ -14,4 +14,4 @@ const UserCardList: FC = () => {
   );
 };
 
-export { UserCardList };
+export { ChatroomList };

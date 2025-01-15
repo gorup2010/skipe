@@ -1,14 +1,14 @@
 import { FC, useState } from "react";
 import { Avatar } from "@/components/ui/image";
 
-type UserCardProps = {
+type ChatroomCardProps = {
   id: string;
   username: string;
   lastMessage: string;
   lastDate: Date;
 };
 
-const UserCard: FC<UserCardProps> = ({
+const ChatroomCard: FC<ChatroomCardProps> = ({
   id,
   username,
   lastMessage,
@@ -38,4 +38,4 @@ const UserCard: FC<UserCardProps> = ({
   );
 };
 
-export { UserCard };
+export { ChatroomCard };

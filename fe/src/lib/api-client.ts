@@ -1,15 +1,28 @@
-import axios from 'axios';
+import axios, { AxiosError, AxiosResponse, CreateAxiosDefaults, InternalAxiosRequestConfig } from 'axios';
+import { getAuth } from './auth';
 
-export const api = axios.create({
+const defaultsConfigs : CreateAxiosDefaults = {
   baseURL: `${import.meta.env.VITE_BASE_URL}`,
   withCredentials: true,
-});
+}
 
-api.interceptors.response.use(
-  (response) => {
-    return response.data;
-  },
-  (error) => {
-    return Promise.reject(error);
+export const api = axios.create(defaultsConfigs);
+
+const onResponseSuccess = (response: AxiosResponse) => {
+  return response.data;
+}
+
+const onResponseError = (error: AxiosError) => {
+  return Promise.reject(error);
+}
+
+const onBeforeRequets = (config: InternalAxiosRequestConfig) => {
+  const auth = getAuth();
+  if (auth) {
+    config.headers.Authorization = `Bearer: ${auth.jwt}`
   }
-);
+  return config;
+}
+
+api.interceptors.request.use(onBeforeRequets)
+api.interceptors.response.use(onResponseSuccess, onResponseError);
