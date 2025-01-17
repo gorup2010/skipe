@@ -1,5 +1,6 @@
-import { ChatroomList } from "@/components/list";
-import { FriendButton } from "@/components/ui/button/friend-button";
+import { ChatroomList, FriendList } from "@/components/list";
+import { FriendInvitationButton } from "@/components/ui/button/friend-invitation-button";
+import { FriendSearchButton } from "@/components/ui/button/friend-search-button";
 import { Avatar } from "@/components/ui/image";
 import { TabIconWrapper } from "@/components/ui/image/tab-icon-wrapper";
 import { useLogout } from "@/hooks/use-logout";
@@ -14,7 +15,7 @@ export const Sidebar: FC = () => {
   const { logout, isPending } = useLogout();
 
   // Tab
-  const [ tab, setTab ] = useState<Tab>(Tab.Chats);
+  const [tab, setTab] = useState<Tab>(Tab.Chats);
 
   return (
     <div className="w-full h-full p-2 flex flex-col space-y-3">
@@ -40,15 +41,26 @@ export const Sidebar: FC = () => {
       </div>
       {/**Tab */}
       <div className="grid grid-cols-2">
-        <TabIconWrapper icon={MessageSquareMore} placeholderTab={Tab.Chats} onSelect={() => setTab(Tab.Chats)} currTab={tab}/>
-        <TabIconWrapper icon={BookUser} placeholderTab={Tab.Contacts} onSelect={() => setTab(Tab.Contacts)} currTab={tab}/>
+        <TabIconWrapper
+          icon={MessageSquareMore}
+          placeholderTab={Tab.Chats}
+          onSelect={() => setTab(Tab.Chats)}
+          currTab={tab}
+        />
+        <TabIconWrapper
+          icon={BookUser}
+          placeholderTab={Tab.Contacts}
+          onSelect={() => setTab(Tab.Contacts)}
+          currTab={tab}
+        />
       </div>
-      {/**Friend Button*/}
-      <FriendButton />
+      {/**Button */}
+      <div className="grid grid-cols-2 space-x-1">
+        <FriendSearchButton />
+        <FriendInvitationButton />
+      </div>
       <hr />
-      {
-        (tab === Tab.Chats) ? <ChatroomList /> : <></>
-      }
+      {tab === Tab.Chats ? <ChatroomList /> : <FriendList />}
     </div>
   );
 };
