@@ -26,6 +26,7 @@ public class AuthController {
     
     private UserService userService;
 
+    // Note that if authentication is fail, Spring return 403.
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(userService.verify(request));
@@ -37,8 +38,9 @@ public class AuthController {
     }
 
     @PostMapping("/test")
-    public String test(Principal principal) {
-        return principal.toString();
+    public String test() {
+        System.out.println("reachable");
+        return "Hello";
     }
     
 }

@@ -1,16 +1,18 @@
 import { Avatar } from "@/components/ui/image";
 import { HamburgerMenu } from "@/components/ui/button";
-import { FC, memo, useState } from "react";
+import { ChangeEvent, FC, memo, useContext, useState } from "react";
 import {
   Paperclip,
   SendHorizontal,
 } from "lucide-react";
 import { ChatCardList } from "@/components/list";
 import { Sidebar } from "./sidebar";
-import { FriendModal } from "@/components/modal";
+import { AppContext } from "@/app/provider";
+import { Message } from "@/types/api";
 
 const Chat: FC = memo(() => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const appContext = useContext(AppContext);
 
   const Profile = () => (
     <div className="flex items-center space-x-4">
@@ -18,6 +20,24 @@ const Chat: FC = memo(() => {
       <span className="text-xl font-semibold">Username</span>
     </div>
   );
+
+  const [content, setContent] = useState<string>('');  
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setContent(event.target.value);
+  };
+
+  const handleSend = () => {
+    if (appContext !== undefined && appContext.socket !== undefined) {
+      appContext.socket.send(content);
+      const newMsg: Message = {
+        content,
+        sender: 1,
+        createdAt: new Date(),
+      }
+      appContext.setMessages((prevMessages) => [...prevMessages, newMsg]);
+    }
+  }
 
   return (
     <div className="flex flex-col divide-x-2 md:flex-row h-screen shadow-inner">
@@ -39,11 +59,16 @@ const Chat: FC = memo(() => {
           <span className="text-xl font-semibold ml-5">Username</span>
         </div>
         <hr />
+
+        {/**Chat */}
         <ChatCardList />
+
+        {/**Input section */}
         <div className="w-full px-2 flex space-x-1">
           <button
             type="button"
             className="flex items-center justify-center w-10 border-2 rounded-xl border-blue-300 "
+            
           >
             <Paperclip color="#66B2FF" />
           </button>
@@ -56,11 +81,13 @@ const Chat: FC = memo(() => {
             ref={null}
             placeholder="Nội dung..."
             disabled={false}
+            onChange={handleChange}
             required
           />
           <button
             type="button"
             className="flex items-center justify-center w-10 border-2 rounded-xl border-blue-300 "
+            onClick={handleSend}
           >
             <SendHorizontal color="#66B2FF" />
           </button>

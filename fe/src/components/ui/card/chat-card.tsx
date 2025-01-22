@@ -1,13 +1,12 @@
 import { FC, useState } from "react";
 
 type ChatCardProps = {
-  id: string;
   isUser: boolean;
   message: string;
   createdAt: Date;
 };
 
-const ChatCard: FC<ChatCardProps> = ({ id, isUser, message, createdAt }) => {
+const ChatCard: FC<ChatCardProps> = ({ isUser, message, createdAt }) => {
   const bgColor = isUser ? " bg-blue-100 " : " bg-gray-200 ";
   const align = isUser ? " flex-row-reverse " : " ";
   const rounded = isUser

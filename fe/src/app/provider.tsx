@@ -1,45 +1,93 @@
-// import { AuthResponse } from "@/types/api";
-// import axios from "axios";
-// import { createContext, FC, ReactNode, useContext, useEffect, useMemo, useState } from "react";
+import { Message } from "@/types/api";
+import {
+  createContext,
+  Dispatch,
+  FC,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { ConnectionFail } from "./pages/error/ConnectionFail";
 
-// const AuthContext = createContext<AuthResponse | undefined>(undefined);
+interface AppProviderProps {
+  children: ReactNode;
+}
 
-// interface AppProviderProps {
-//     children: ReactNode;
-// }
+interface AppContextType {
+  socket: WebSocket | undefined;
+  messages: Message[];
+  setMessages: Dispatch<SetStateAction<Message[]>>;
+}
 
-// export const AppProvider : FC<AppProviderProps> = ({ children }) => {
-//   const [token, setToken_] = useState(localStorage.getItem("token"));
+export const AppContext = createContext<AppContextType | undefined>(undefined);
 
-//   const setToken = (newToken: string) => {
-//     setToken_(newToken);
-//   };
+export const AppProvider: FC<AppProviderProps> = ({ children }) => {
+  const [socket, setSocket] = useState<WebSocket | undefined>(undefined);
+  const [messages, setMessages] = useState<Message[]>([{content: "Hello", sender: 2, createdAt: new Date()}]);
+  const [error, setError] = useState(false);
 
-//   useEffect(() => {
-//     if (token) {
-//       axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-//       localStorage.setItem('token',token);
-//     } else {
-//       delete axios.defaults.headers.common["Authorization"];
-//       localStorage.removeItem('token')
-//     }
-//   }, [token]);
+  const connectWebSocket = () => {
+    const ws = new WebSocket("ws://localhost:8080/chat");
 
-//   // Memoized value of the authentication context
-//   const contextValue = useMemo(
-//     () => ({
-//       token,
-//       setToken,
-//     }),
-//     [token]
-//   );
+    ws.onopen = () => {
+      console.log("WebSocket connection established");
+      setError(false);
+    };
 
-//   // Provide the authentication context to the children components
-//   return (
-//     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
-//   );
-// };
+    ws.onmessage = (event: MessageEvent<string>) => {
+      const message : string = event.data;
+      console.log("Message received from server:", message);
+      const newMsg : Message = {
+        content: message,
+        sender: 2,
+        createdAt: new Date(),
+      }
+      setMessages((prevMessages) => [...prevMessages, newMsg]);
+    };
 
-// export const useAuth = () => {
-//   return useContext(AuthContext);
-// };
+    ws.onerror = (err) => {
+      console.error("WebSocket error:", err);
+      setError(true);
+    };
+
+    ws.onclose = () => {
+      console.log("WebSocket connection closed");
+      setError(true);
+    };
+
+    setSocket(ws);
+  };
+
+  const retryConnection = () => {
+    setError(false);
+    connectWebSocket();
+  };
+
+
+  useEffect(() => {
+    connectWebSocket();
+
+    // Cleanup function to close the socket
+    return () => socket?.close();
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({
+      socket,
+      messages,
+      setMessages,
+    }),
+    [socket, messages]
+  );
+
+  if (error) {
+    return <ConnectionFail retryConnection={retryConnection}/>
+  }
+
+  // Provide the authentication context to the children components
+  return (
+    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
+  );
+};

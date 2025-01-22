@@ -8,3 +8,9 @@ export type AuthResponse = {
   jwt: string;
   user: User;
 };
+
+export type Message = {
+  content: string;
+  sender: number;
+  createdAt: Date;
+}

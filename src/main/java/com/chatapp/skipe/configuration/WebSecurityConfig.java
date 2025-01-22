@@ -18,9 +18,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
 import lombok.AllArgsConstructor;
@@ -35,7 +35,6 @@ public class WebSecurityConfig {
 
     private UserDetailsService userDetailsService;
     private JwtAuthFilter jwtAuthFilter;
-
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -59,11 +58,12 @@ public class WebSecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .addFilterBefore(new CustomFilter(), CorsFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/login", "/register", "/logout-success")
+                        .requestMatchers("/login", "/register", "/logout-success", "/chat/**")
                         .permitAll()
                         .anyRequest().authenticated())
                 .logout(logout -> logout.logoutSuccessUrl("/logout-success")) // If logging out success, redirect to

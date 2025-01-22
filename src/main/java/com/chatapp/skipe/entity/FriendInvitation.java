@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class FriendInvitation {
     @Id
     Integer id;
-    User sender;
+    User senders;
     User receiver;
     ZonedDateTime createdAt;
 }
