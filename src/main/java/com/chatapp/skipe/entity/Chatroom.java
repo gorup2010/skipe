@@ -1,7 +1,5 @@
 package com.chatapp.skipe.entity;
 
-import java.time.ZonedDateTime;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -12,10 +10,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FriendInvitation {
+public class Chatroom {
     @Id
     Integer id;
-    Integer sender;
-    Integer receiver;
-    ZonedDateTime createdAt;
+    String name;
+    String avatar;
+    Boolean isGroupChat;
 }

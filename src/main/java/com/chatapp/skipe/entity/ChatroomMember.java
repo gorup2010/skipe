@@ -12,10 +12,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FriendInvitation {
+public class ChatroomMember {
     @Id
-    Integer id;
-    Integer sender;
-    Integer receiver;
-    ZonedDateTime createdAt;
+    Integer user;
+    @Id
+    Integer chatroom;
+    Boolean isInChatroom;
+    Boolean isRead;
+    ZonedDateTime attendedAt;
 }

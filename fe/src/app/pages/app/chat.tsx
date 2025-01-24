@@ -28,8 +28,11 @@ const Chat: FC = memo(() => {
   };
 
   const handleSend = () => {
-    if (appContext !== undefined && appContext.socket !== undefined) {
-      appContext.socket.send(content);
+    if (appContext !== undefined && appContext.client !== undefined) {
+      appContext.client.publish({
+        destination: "app/chat",
+        body: content
+      })
       const newMsg: Message = {
         content,
         sender: 1,

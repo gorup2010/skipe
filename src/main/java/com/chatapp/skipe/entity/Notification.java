@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FriendInvitation {
+public class Notification {
     @Id
     Integer id;
-    Integer sender;
-    Integer receiver;
+    Integer user;
+    String content;
     ZonedDateTime createdAt;
 }

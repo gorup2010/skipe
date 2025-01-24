@@ -10,13 +10,14 @@ import {
   useState,
 } from "react";
 import { ConnectionFail } from "./pages/error/ConnectionFail";
+import { Client, IMessage } from "@stomp/stompjs";
 
 interface AppProviderProps {
   children: ReactNode;
 }
 
 interface AppContextType {
-  socket: WebSocket | undefined;
+  client: Client | undefined;
   messages: Message[];
   setMessages: Dispatch<SetStateAction<Message[]>>;
 }
@@ -24,40 +25,57 @@ interface AppContextType {
 export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: FC<AppProviderProps> = ({ children }) => {
-  const [socket, setSocket] = useState<WebSocket | undefined>(undefined);
-  const [messages, setMessages] = useState<Message[]>([{content: "Hello", sender: 2, createdAt: new Date()}]);
+  const [client, setClient] = useState<Client | undefined>(undefined);
+  const [messages, setMessages] = useState<Message[]>([
+    { content: "Hello", sender: 2, createdAt: new Date() },
+  ]);
   const [error, setError] = useState(false);
 
-  const connectWebSocket = () => {
-    const ws = new WebSocket("ws://localhost:8080/chat");
+  const disconnect = () => {
+    client?.deactivate();
+  };
 
-    ws.onopen = () => {
+  const connectWebSocket = () => {
+    const client = new Client({
+      brokerURL: "ws://localhost:8080/connect-ws",
+    });
+
+    client.onConnect = () => {
+      client.subscribe("/topic/test", (message: IMessage) => {
+        console.log("Message received from server:", message.body);
+        const newMsg: Message = {
+          content: message.body || "",
+          sender: 2,
+          createdAt: new Date(),
+        };
+        setMessages((prevMessages) => [...prevMessages, newMsg]);
+      });
       console.log("WebSocket connection established");
       setError(false);
     };
 
-    ws.onmessage = (event: MessageEvent<string>) => {
-      const message : string = event.data;
-      console.log("Message received from server:", message);
-      const newMsg : Message = {
-        content: message,
-        sender: 2,
-        createdAt: new Date(),
-      }
-      setMessages((prevMessages) => [...prevMessages, newMsg]);
-    };
-
-    ws.onerror = (err) => {
-      console.error("WebSocket error:", err);
+    client.onDisconnect = () => {
+      console.log("WebSocket disconnect");
       setError(true);
     };
 
-    ws.onclose = () => {
-      console.log("WebSocket connection closed");
+    client.onWebSocketError = (error) => {
+      console.log("Error with websocket", error);
       setError(true);
     };
 
-    setSocket(ws);
+    client.onStompError = (frame) => {
+      console.log("Broker reported error: " + frame.headers["message"]);
+      console.log("Additional details: " + frame.body);
+      setError(true);
+    };
+
+    client.onWebSocketClose = () => {
+      console.log("Websocket close!");
+    };
+
+    client.activate();
+    setClient(client);
   };
 
   const retryConnection = () => {
@@ -65,25 +83,40 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
     connectWebSocket();
   };
 
-
   useEffect(() => {
     connectWebSocket();
 
     // Cleanup function to close the socket
-    return () => socket?.close();
+    return disconnect;
   }, []);
+
+  // useEffect(() => {
+  //   if (client !== undefined) {
+  //     client.subscribe("/topic/test", (message: IMessage) => {
+  //       console.log("Message received from server:", message.body);
+  //       const newMsg: Message = {
+  //         content: message.body || "",
+  //         sender: 2,
+  //         createdAt: new Date(),
+  //       };
+  //       setMessages((prevMessages) => [...prevMessages, newMsg]);
+  //     });
+  //   }
+  // }, [client]);
 
   const contextValue = useMemo(
     () => ({
-      socket,
+      client,
       messages,
       setMessages,
     }),
-    [socket, messages]
+    [client, messages]
   );
 
   if (error) {
-    return <ConnectionFail retryConnection={retryConnection}/>
+    // Add disconnect to stop automatically retrying 
+    disconnect();
+    return <ConnectionFail retryConnection={retryConnection} />;
   }
 
   // Provide the authentication context to the children components
