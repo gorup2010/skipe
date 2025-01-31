@@ -6,10 +6,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.chatapp.skipe.dto.AccountDto;
 import com.chatapp.skipe.dto.AuthResponse;
 import com.chatapp.skipe.dto.LoginRequest;
 import com.chatapp.skipe.dto.RegisterRequest;
-import com.chatapp.skipe.dto.UserDto;
 import com.chatapp.skipe.entity.User;
 import com.chatapp.skipe.exception.ForbiddenException;
 import com.chatapp.skipe.repository.UserRepository;
@@ -44,7 +44,7 @@ public class UserService {
         // TODO: Maybe we can use a Mapper to do these things.
         User user = (User) authentication.getPrincipal();
         String jwt = jwtService.generateToken(request.username());
-        UserDto userDto = new UserDto(user.getUsername(), user.getEmail());
+        AccountDto userDto = new AccountDto(user.getId(), user.getUsername(), user.getEmail(), user.getAvatar());
 
         return new AuthResponse(userDto, jwt);
     }

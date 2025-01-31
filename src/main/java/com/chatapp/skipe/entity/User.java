@@ -1,5 +1,6 @@
 package com.chatapp.skipe.entity;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 

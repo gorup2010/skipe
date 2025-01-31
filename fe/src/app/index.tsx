@@ -5,6 +5,7 @@ import router from "./router";
 
 const queryClient = new QueryClient();
 
+
 export default function App() {
   window.addEventListener("load", (e) => {
     if (window.location.hash == "#_=_") {

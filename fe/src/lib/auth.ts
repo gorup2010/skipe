@@ -2,9 +2,10 @@ import { z } from "zod";
 
 import { api } from "./api-client";
 import { AuthResponse } from "@/types/api";
+import EventEmitter from "events";
 
-export const logout = (): Promise<void> => {
-  return api.post("test");
+export const logout = (): void => {
+  
 };
 
 export const loginInputSchema = z.object({
@@ -60,3 +61,17 @@ export const getAuth = (): AuthResponse | null => {
     return null;
   }
 };
+
+const logoutEmitter = new EventEmitter();
+
+export const emitLogoutEvent = () => {
+  logoutEmitter.emit('logout')
+}
+
+export const addLogoutListener = (callback: () => void) => {
+  logoutEmitter.addListener('logout', callback)
+}
+
+export const removeLogoutListener = (callback: () => void) => {
+  logoutEmitter.removeListener('logout', callback)
+}

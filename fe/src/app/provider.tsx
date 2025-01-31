@@ -5,6 +5,7 @@ import {
   FC,
   ReactNode,
   SetStateAction,
+  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -25,15 +26,16 @@ interface AppContextType {
 export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: FC<AppProviderProps> = ({ children }) => {
+  // TODO: convert to useRef
   const [client, setClient] = useState<Client | undefined>(undefined);
   const [messages, setMessages] = useState<Message[]>([
     { content: "Hello", sender: 2, createdAt: new Date() },
   ]);
   const [error, setError] = useState(false);
 
-  const disconnect = () => {
+  const disconnect = useCallback(() => {
     client?.deactivate();
-  };
+  }, [client]);
 
   const connectWebSocket = () => {
     const client = new Client({
@@ -59,21 +61,6 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
       setError(true);
     };
 
-    client.onWebSocketError = (error) => {
-      console.log("Error with websocket", error);
-      setError(true);
-    };
-
-    client.onStompError = (frame) => {
-      console.log("Broker reported error: " + frame.headers["message"]);
-      console.log("Additional details: " + frame.body);
-      setError(true);
-    };
-
-    client.onWebSocketClose = () => {
-      console.log("Websocket close!");
-    };
-
     client.activate();
     setClient(client);
   };
@@ -84,25 +71,13 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    connectWebSocket();
+    if (client == null) {
+      connectWebSocket();
+    }
 
     // Cleanup function to close the socket
     return disconnect;
-  }, []);
-
-  // useEffect(() => {
-  //   if (client !== undefined) {
-  //     client.subscribe("/topic/test", (message: IMessage) => {
-  //       console.log("Message received from server:", message.body);
-  //       const newMsg: Message = {
-  //         content: message.body || "",
-  //         sender: 2,
-  //         createdAt: new Date(),
-  //       };
-  //       setMessages((prevMessages) => [...prevMessages, newMsg]);
-  //     });
-  //   }
-  // }, [client]);
+  }, [client, disconnect]);
 
   const contextValue = useMemo(
     () => ({

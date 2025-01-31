@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record AuthResponse(
-    UserDto user,
+    AccountDto user,
     String jwt
 ) {
 }

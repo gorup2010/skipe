@@ -1,12 +1,33 @@
-export type User = {
+// Information of the users login to website
+export type Account = {
+  id: number;
   email: string;
   username: string;
   avatar: string;
 };
 
+// Information of the other users like friends, searched users,...
+export type User = {
+  id: number;
+  username: string;
+  avatar: string;
+}
+
+export type FriendInvitation = {
+  id: number;
+  sender: User;
+  receiver: User;
+  createdAt: Date;
+}
+
+export type FriendInvitationDto = {
+  sentInvt: FriendInvitation[];
+  receivedInvt: FriendInvitation[];
+}
+
 export type AuthResponse = {
   jwt: string;
-  user: User;
+  user: Account;
 };
 
 export type Message = {

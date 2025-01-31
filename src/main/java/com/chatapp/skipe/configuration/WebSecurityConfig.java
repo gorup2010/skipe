@@ -21,7 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.filter.DelegatingFilterProxy;
 
 import lombok.AllArgsConstructor;
 
@@ -63,12 +62,12 @@ public class WebSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/login", "/register", "/logout-success", "/connect-ws/**", "/topic/**", "/app/**")
+                        .requestMatchers("/login", "/register", "/logout-success", "/connect-ws", "/test")
                         .permitAll()
                         .anyRequest().authenticated())
                 .logout(logout -> logout.logoutSuccessUrl("/logout-success")) // If logging out success, redirect to
                                                                               // logout-success
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .build();
     }

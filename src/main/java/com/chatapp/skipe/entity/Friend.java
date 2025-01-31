@@ -18,4 +18,6 @@ public class Friend {
     @Id
     Integer friend;
     ZonedDateTime createdAt;
+
+    
 }

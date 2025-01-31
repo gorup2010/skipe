@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse, CreateAxiosDefaults, InternalAxiosRequestConfig } from 'axios';
-import { getAuth } from './auth';
+import { emitLogoutEvent, getAuth } from './auth';
 
 const defaultsConfigs : CreateAxiosDefaults = {
   baseURL: `${import.meta.env.VITE_BASE_URL}`,
@@ -13,13 +13,17 @@ const onResponseSuccess = (response: AxiosResponse) => {
 }
 
 const onResponseError = (error: AxiosError) => {
+  if (error.response?.status == 401) {
+    localStorage.removeItem("user");
+    emitLogoutEvent();
+  }
   return Promise.reject(error);
 }
 
 const onBeforeRequets = (config: InternalAxiosRequestConfig) => {
   const auth = getAuth();
   if (auth) {
-    config.headers.Authorization = `Bearer: ${auth.jwt}`
+    config.headers.Authorization = `Bearer ${auth.jwt}`
   }
   return config;
 }
