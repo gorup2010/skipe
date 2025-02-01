@@ -1,7 +1,7 @@
 import { FC, useRef, useState } from "react";
 import { Button, Modal, TextInput } from "flowbite-react";
-import { SearchedUserCard } from "../ui/card";
-import { useSearchUser } from "@/hooks/use-search-user";
+import { useSearchUser } from "../api/search-user";
+import { SearchUserCard } from "./search-user-card";
 
 type FriendSearchModalProps = {
   openModal: boolean;
@@ -15,7 +15,7 @@ const FriendSearchModal: FC<FriendSearchModalProps> = ({
   const [username, setUsername] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { users } = useSearchUser(username, page);
+  const searchUserQuery= useSearchUser(username, page);
 
   const onClickSearch = () => {
     setUsername(inputRef.current?.value || "");
@@ -40,11 +40,10 @@ const FriendSearchModal: FC<FriendSearchModalProps> = ({
 
         {/**Searched User List */}
         <div className="min-h-60 py-2">
-          {users?.map((user) => (
-            <SearchedUserCard
-              key={user.username}
-              avatar={user.avatar}
-              username={user.username}
+          {searchUserQuery.data?.map((user) => (
+            <SearchUserCard
+              key={user.id}
+              user={user}
             />
           ))}
         </div>

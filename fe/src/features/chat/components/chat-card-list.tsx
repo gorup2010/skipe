@@ -1,5 +1,5 @@
 import { FC, useContext } from "react";
-import { ChatCard } from "@/components/ui/card";
+import { ChatCard } from "./chat-card";
 import { AppContext } from "@/app/provider";
 
 const ChatCardList: FC = () => {

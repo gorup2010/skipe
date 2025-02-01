@@ -1,5 +1,5 @@
 package com.chatapp.skipe.dto;
 
-public record FriendRequestDto(
+public record FriendInvitationPostDto(
         Integer userId) {
 }

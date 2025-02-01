@@ -1,4 +1,4 @@
-import { FriendSearchModal } from "@/components/modal";
+import { FriendSearchModal } from "./search-user-modal";
 import { UserPlus } from "lucide-react";
 import { FC, useState } from "react";
 

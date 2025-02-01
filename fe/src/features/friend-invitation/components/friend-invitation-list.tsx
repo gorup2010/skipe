@@ -1,13 +1,17 @@
-import { FC } from "react";
-import { FriendInvitationCard } from "@/components/ui/card";
+import { FC, memo } from "react";
+import { FriendInvitationCard } from "./friend-invitation-card";
+
 
 type FriendInvitationListProps = {
   isReceived?: boolean;
 };
 
-const FriendInvitationList: FC<FriendInvitationListProps> = ({
+const FriendInvitationList: FC<FriendInvitationListProps> = memo(({
   isReceived = true,
 }) => {
+
+  console.log("FriendInvitationList");
+
   return (
     <div className="space-y-2">
       <FriendInvitationCard
@@ -24,6 +28,6 @@ const FriendInvitationList: FC<FriendInvitationListProps> = ({
       />
     </div>
   );
-};
+});
 
 export { FriendInvitationList };

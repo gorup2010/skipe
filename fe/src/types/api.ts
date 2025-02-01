@@ -20,7 +20,7 @@ export type FriendInvitation = {
   createdAt: Date;
 }
 
-export type FriendInvitationDto = {
+export type FriendInvitationGetDto = {
   sentInvt: FriendInvitation[];
   receivedInvt: FriendInvitation[];
 }

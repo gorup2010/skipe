@@ -1,6 +1,6 @@
-import { FriendInvitationModal } from "@/components/modal";
 import { Handshake } from "lucide-react";
 import { FC, useState } from "react";
+import { FriendInvitationModal } from "./friend-invitation-modal";
 
 const FriendInvitationButton: FC = () => {
   const [openModal, setOpenModal] = useState(false);

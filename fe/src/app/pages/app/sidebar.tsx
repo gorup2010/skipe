@@ -1,12 +1,15 @@
-import { ChatroomList, FriendList } from "@/components/list";
-import { FriendInvitationButton } from "@/components/ui/button/friend-invitation-button";
-import { FriendSearchButton } from "@/components/ui/button/friend-search-button";
-import { Avatar } from "@/components/ui/image";
-import { TabIconWrapper } from "@/components/ui/image/tab-icon-wrapper";
-import { useLogout } from "@/hooks/use-logout";
-import { Tab } from "@/types/sidebar";
 import { BookUser, LogOut, MessageSquareMore } from "lucide-react";
 import { FC, useState } from "react";
+
+import { useLogout } from "@/hooks/use-logout";
+import { Tab } from "@/types/sidebar";
+
+import { ChatroomList } from "@/features/chat/components/chatroom-list";
+import { FriendList } from "@/features/friend/components/friend-list";
+import { FriendInvitationButton } from "@/features/friend-invitation/components/friend-invitation-button";
+import { FriendSearchButton } from "@/features/search-user/components/search-user-button";
+import { Avatar } from "@/components/ui/image";
+import { TabIconWrapper } from "@/components/ui/image/tab-icon-wrapper";
 
 export const Sidebar: FC = () => {
   // Log out button

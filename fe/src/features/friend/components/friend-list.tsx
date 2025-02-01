@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { FriendCard } from "@/components/ui/card";
+import { FriendCard } from "./friend-card";
 
 type FriendListProps = {
   isReceived?: boolean;

@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chatapp.skipe.dto.AuthResponse;
 import com.chatapp.skipe.dto.FriendInvitationDto;
+import com.chatapp.skipe.dto.FriendInvitationGetDto;
 import com.chatapp.skipe.dto.LoginRequest;
 import com.chatapp.skipe.dto.RegisterRequest;
 import com.chatapp.skipe.entity.FriendInvitation;
@@ -41,11 +42,11 @@ public class AuthController {
     }
 
     @GetMapping("/test")
-    public ResponseEntity<FriendInvitationDto> getFriendInvitation(
+    public ResponseEntity<FriendInvitationGetDto> getFriendInvitation(
             @AuthenticationPrincipal User user) {
         List<FriendInvitation> sentInvitation = friendInvitationRepository.findAllBySender(user);
         List<FriendInvitation> receivedInvitation = friendInvitationRepository.findAllByReceiver(user);
-        FriendInvitationDto res = new FriendInvitationDto(sentInvitation, receivedInvitation);
+        FriendInvitationGetDto res = FriendInvitationGetDto.fromModel(sentInvitation, receivedInvitation);
         return ResponseEntity.ok(res);
     }
 

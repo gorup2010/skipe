@@ -5,7 +5,7 @@ import {
   Paperclip,
   SendHorizontal,
 } from "lucide-react";
-import { ChatCardList } from "@/components/list";
+import { ChatCardList } from "@/features/chat/components/chat-card-list";
 import { Sidebar } from "./sidebar";
 import { AppContext } from "@/app/provider";
 import { Message } from "@/types/api";

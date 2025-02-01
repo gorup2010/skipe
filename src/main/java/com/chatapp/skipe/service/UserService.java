@@ -44,8 +44,8 @@ public class UserService {
         // TODO: Maybe we can use a Mapper to do these things.
         User user = (User) authentication.getPrincipal();
         String jwt = jwtService.generateToken(request.username());
-        AccountDto userDto = new AccountDto(user.getId(), user.getUsername(), user.getEmail(), user.getAvatar());
+        AccountDto accountDto = new AccountDto(user.getId(), user.getUsername(), user.getEmail(), user.getAvatar());
 
-        return new AuthResponse(userDto, jwt);
+        return new AuthResponse(accountDto, jwt);
     }
 }

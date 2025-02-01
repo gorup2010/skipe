@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { ChatroomCard } from "@/components/ui/card";
+import { ChatroomCard } from "./chatroom-card";
 
 const ChatroomList: FC = () => {
   return (
