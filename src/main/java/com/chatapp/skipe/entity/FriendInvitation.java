@@ -5,6 +5,7 @@ import java.time.ZonedDateTime;
 
 import org.hibernate.annotations.ManyToAny;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +18,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Entity
 @Builder
@@ -28,6 +28,8 @@ public class FriendInvitation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
+
+    @Column(insertable = false, updatable = false)
     ZonedDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

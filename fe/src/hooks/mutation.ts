@@ -1,6 +1,6 @@
 import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 
 export const create = ({
@@ -18,7 +18,9 @@ type Options = {
 
 export const useX = ({
   mutationConfig
-}: Options) => {
+}: Options = {}) => {
+
+  const queryClient = useQueryClient();
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
 
@@ -29,6 +31,7 @@ export const useX = ({
     },
     ...restConfig,
     onSuccess: (...args) => {
+      queryClient.invalidateQueries();
       onSuccess?.(...args)
     },
   });
