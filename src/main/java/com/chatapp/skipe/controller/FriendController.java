@@ -19,18 +19,17 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-
 @RestController
 @RequestMapping("friends")
 @AllArgsConstructor
 public class FriendController {
-    
+
     FriendRepository friendRepository;
 
-    // @GetMapping()
-    // public ResponseEntity<List<UserDto>> getFriends(@AuthenticationPrincipal User user) {
-        
-    // }
-    
+    @GetMapping()
+    public ResponseEntity<List<UserDto>> getFriends(@AuthenticationPrincipal User user) {
+        List<UserDto> res = user.getFriends().stream().map(friend -> UserDto.fromModel(friend.getFriend())).toList();
+        return ResponseEntity.ok(res);
+    }
+
 }

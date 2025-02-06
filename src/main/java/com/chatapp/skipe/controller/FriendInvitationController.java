@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class FriendInvitationController {
 
     FriendInvitationRepository friendInvitationRepository;
-    FriendRepository friendRepository;
     UserRepository userRepository;
 
     @GetMapping()
@@ -60,8 +59,8 @@ public class FriendInvitationController {
 
     @PostMapping("{invitationId}/accept")
     public ResponseEntity<Void> acceptFriendInvitation(@PathVariable Integer invitationId) {
-        friendInvitationRepository.delete(friendInvitationRepository.getReferenceById(invitationId));
-
+       
+        
         return ResponseEntity.noContent().build();
     }
     

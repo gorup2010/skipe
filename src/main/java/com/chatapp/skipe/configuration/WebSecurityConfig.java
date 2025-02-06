@@ -62,7 +62,7 @@ public class WebSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/login", "/register", "/logout-success", "/connect-ws", "/test")
+                        .requestMatchers("/login", "/register", "/logout-success", "/connect-ws", "/test/**")
                         .permitAll()
                         .anyRequest().authenticated())
                 .logout(logout -> logout.logoutSuccessUrl("/logout-success")) // If logging out success, redirect to
