@@ -21,7 +21,7 @@ export const getFriendInvitationsQueryOptions = () => {
         response.asSender.set(invt.receiver.id, invt)
       );
       apiResponse.receivedInvt.forEach((invt) =>
-        response.asSender.set(invt.sender.id, invt)
+        response.asReveiver.set(invt.sender.id, invt)
       );
 
       return response;

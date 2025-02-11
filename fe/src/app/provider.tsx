@@ -12,6 +12,10 @@ import {
 } from "react";
 import { ConnectionFail } from "./pages/error/ConnectionFail";
 import { Client, IMessage } from "@stomp/stompjs";
+import { getAuth } from "@/lib/auth";
+import { useQueryClient } from "@tanstack/react-query";
+import { getFriendInvitationsQueryOptions } from "@/features/friend-invitation/api/get-friend-invitation";
+import { getFriendsQueryOptions } from "@/features/friend/api/get-friends";
 
 interface AppProviderProps {
   children: ReactNode;
@@ -26,6 +30,8 @@ interface AppContextType {
 export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: FC<AppProviderProps> = ({ children }) => {
+  const queryClient = useQueryClient();
+
   // TODO: convert to useRef
   const [client, setClient] = useState<Client | undefined>(undefined);
   const [messages, setMessages] = useState<Message[]>([
@@ -43,15 +49,36 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
     });
 
     client.onConnect = () => {
+      const user = getAuth()?.user;
+
       client.subscribe("/topic/test", (message: IMessage) => {
         console.log("Message received from server:", message.body);
         const newMsg: Message = {
           content: message.body || "",
           sender: 2,
-          createdAt: new Date(),
+          createdAt: "new Date()",
         };
         setMessages((prevMessages) => [...prevMessages, newMsg]);
       });
+
+      client.subscribe(`/queue/${user?.id}/new-friend`, () => {
+        queryClient.invalidateQueries({
+          queryKey: [
+            getFriendInvitationsQueryOptions().queryKey,
+            getFriendsQueryOptions().queryKey,
+          ],
+        });
+      })
+
+      client.subscribe(`/queue/${user?.id}/new-friend-invitation`, () => {
+        console.log("HOW TF IS THAT SHIT");
+        queryClient.invalidateQueries({
+          queryKey: [
+            getFriendInvitationsQueryOptions().queryKey,
+          ],
+        });
+      })
+
       console.log("WebSocket connection established");
       setError(false);
     };

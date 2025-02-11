@@ -1,21 +1,34 @@
 import { FC } from "react";
 import { FriendCard } from "./friend-card";
+import { useFriends } from "../api/get-friends";
+import { Spinner } from "flowbite-react";
 
 type FriendListProps = {
   isReceived?: boolean;
 };
 
 const FriendList: FC<FriendListProps> = () => {
+  const friendsQuery = useFriends();
+
+  if (friendsQuery.isLoading) {
+    return <Spinner />;
+  }
+
+  if (friendsQuery.data == undefined) {
+    return <div>There is nothing here</div>;
+  }
+
+  // const friends: User[] = [];
+  // friendsQuery.data.forEach((value) => friends.push(value));
+
   return (
     <div className="space-y-2">
-      <FriendCard
-        avatar=""
-        username="Lau Hoi"
-      />
-      <FriendCard
-        avatar=""
-        username="Lau Hoi"
-      />
+      {
+        [...friendsQuery.data].map(([, value]) => (
+          <FriendCard key={value.id} avatar={value.avatar} username={value.username}
+          />
+        ))
+      }
     </div>
   );
 };

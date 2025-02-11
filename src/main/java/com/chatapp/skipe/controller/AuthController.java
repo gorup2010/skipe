@@ -1,6 +1,7 @@
 package com.chatapp.skipe.controller;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.socket.config.WebSocketMessageBrokerStats;
 
 import com.chatapp.skipe.dto.AuthResponse;
 import com.chatapp.skipe.dto.LoginRequest;
@@ -8,6 +9,8 @@ import com.chatapp.skipe.dto.RegisterRequest;
 import com.chatapp.skipe.dto.UserDto;
 import com.chatapp.skipe.entity.User;
 import com.chatapp.skipe.repository.FriendInvitationRepository;
+import com.chatapp.skipe.repository.UserRepository;
+import com.chatapp.skipe.service.FriendService;
 import com.chatapp.skipe.service.UserService;
 
 import lombok.AllArgsConstructor;
@@ -25,8 +28,12 @@ public class AuthController {
 
     private UserService userService;
     FriendInvitationRepository friendInvitationRepository;
+    FriendService friendService;
+    UserRepository userRepository;
+    WebSocketMessageBrokerStats stats;
 
     // Note that if authentication is fail, Spring return 403.
+    // Because currently the "error" endpoint isn't in the list in requestMatchers.
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(userService.verify(request));
@@ -39,8 +46,14 @@ public class AuthController {
 
     @GetMapping("/test")
     public ResponseEntity<List<UserDto>> getFriendInvitation() {
-
-        return ResponseEntity.ok(null);
+        User u = userRepository.findById(3).get();
+        List<UserDto> res = friendService.getFriends(u);
+        return ResponseEntity.ok(res);
     }
 
+    // Whenever authentication fail, spring boot will redirect users to the "/error" endpoint with respective HTTP method with the request
+    // @PostMapping("error")
+    // public ResponseEntity<?> postMethodName(HttpServletRequest request) {
+    //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    // }
 }

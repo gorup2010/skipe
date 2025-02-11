@@ -9,12 +9,14 @@ import com.chatapp.skipe.entity.User;
 import com.chatapp.skipe.repository.FriendInvitationRepository;
 import com.chatapp.skipe.repository.FriendRepository;
 import com.chatapp.skipe.repository.UserRepository;
+import com.chatapp.skipe.service.FriendInvitationService;
 
 import lombok.AllArgsConstructor;
 
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @AllArgsConstructor
 public class FriendInvitationController {
 
+    SimpMessagingTemplate template;
+    FriendInvitationService friendInvitationService;
     FriendInvitationRepository friendInvitationRepository;
     UserRepository userRepository;
 
@@ -48,6 +52,8 @@ public class FriendInvitationController {
                 .receiver(userRepository.getReferenceById(dto.userId()))
                 .build();
         friendInvitationRepository.save(invt);
+        System.out.println("/queue/" + dto.userId() + "/new-friend-invitation");
+        template.convertAndSend("/queue/" + dto.userId() + "/new-friend-invitation", "new-friend-invitation");
         return ResponseEntity.noContent().build();
     }
 
@@ -59,9 +65,9 @@ public class FriendInvitationController {
 
     @PostMapping("{invitationId}/accept")
     public ResponseEntity<Void> acceptFriendInvitation(@PathVariable Integer invitationId) {
-       
-        
+        User acceptedUser = friendInvitationService.acceptFriendInvitation(invitationId);
+        template.convertAndSend("/queue/" + acceptedUser.getId() + "/new-friend", "new-friend");
         return ResponseEntity.noContent().build();
     }
-    
+
 }

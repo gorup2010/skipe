@@ -20,8 +20,9 @@ public class FriendInvitationService {
     FriendRepository friendRepository;
     UserRepository userRepository;
 
+    // Return the accepted user
     @Transactional
-    public void acceptFriendInvitation(Integer invitationId) {
+    public User acceptFriendInvitation(Integer invitationId) {
         FriendInvitation invt = friendInvitationRepository.getReferenceById(invitationId);
 
         // Delete friend invitation
@@ -40,5 +41,7 @@ public class FriendInvitationService {
 
         friendRepository.save(f_accepting);
         friendRepository.save(f_accepted);
+
+        return accepted;
     }
 }

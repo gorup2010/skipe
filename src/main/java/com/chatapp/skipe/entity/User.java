@@ -40,7 +40,7 @@ public class User implements UserDetails {
     private String password;
     private String avatar;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default
     List<Friend> friends = new ArrayList<>();
 

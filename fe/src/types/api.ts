@@ -17,7 +17,7 @@ export type FriendInvitation = {
   id: number;
   sender: User;
   receiver: User;
-  createdAt: Date;
+  createdAt: string;
 }
 
 export type FriendInvitationGetDto = {
@@ -33,5 +33,5 @@ export type AuthResponse = {
 export type Message = {
   content: string;
   sender: number;
-  createdAt: Date;
+  createdAt: string;
 }
