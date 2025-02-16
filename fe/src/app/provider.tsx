@@ -1,4 +1,4 @@
-import { Message } from "@/types/api";
+import { Message, Notication } from "@/types/api";
 import {
   createContext,
   Dispatch,
@@ -31,6 +31,16 @@ export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   const queryClient = useQueryClient();
+  const invalidateFriendInvts = () => {
+    queryClient.invalidateQueries({
+      queryKey: getFriendInvitationsQueryOptions().queryKey,
+    });
+  }
+  const invalidateFriends = () => {
+    queryClient.invalidateQueries({
+      queryKey: getFriendsQueryOptions().queryKey,
+    });
+  }
 
   // TODO: convert to useRef
   const [client, setClient] = useState<Client | undefined>(undefined);
@@ -61,22 +71,17 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
         setMessages((prevMessages) => [...prevMessages, newMsg]);
       });
 
-      client.subscribe(`/queue/${user?.id}/new-friend`, () => {
-        queryClient.invalidateQueries({
-          queryKey: [
-            getFriendInvitationsQueryOptions().queryKey,
-            getFriendsQueryOptions().queryKey,
-          ],
-        });
-      })
-
-      client.subscribe(`/queue/${user?.id}/new-friend-invitation`, () => {
-        console.log("HOW TF IS THAT SHIT");
-        queryClient.invalidateQueries({
-          queryKey: [
-            getFriendInvitationsQueryOptions().queryKey,
-          ],
-        });
+      client.subscribe(`/queue/${user?.id}`, (message: IMessage) => {
+        const notification : Notication = JSON.parse(message.body);
+        switch (notification.type) {
+          case "NEW_FRIEND":
+            invalidateFriendInvts();
+            invalidateFriends();
+            break;
+          case "NEW_FRIEND_INVITATION":
+            invalidateFriendInvts();
+            break;
+        }
       })
 
       console.log("WebSocket connection established");

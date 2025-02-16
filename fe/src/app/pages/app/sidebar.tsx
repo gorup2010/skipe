@@ -10,6 +10,8 @@ import { FriendInvitationButton } from "@/features/friend-invitation/components/
 import { FriendSearchButton } from "@/features/search-user/components/search-user-button";
 import { Avatar } from "@/components/ui/image";
 import { TabIconWrapper } from "@/components/ui/image/tab-icon-wrapper";
+import { Button } from "flowbite-react";
+import { useX } from "@/hooks/mutation";
 
 export const Sidebar: FC = () => {
   // Log out button
@@ -19,6 +21,14 @@ export const Sidebar: FC = () => {
 
   // Tab
   const [tab, setTab] = useState<Tab>(Tab.Chats);
+
+  const testMutation = useX({
+    mutationConfig: {
+      onSuccess: (data) => {
+        console.log(data);
+      }
+    }
+  });
 
   return (
     <div className="w-full h-full p-2 flex flex-col space-y-3">
@@ -61,6 +71,7 @@ export const Sidebar: FC = () => {
       <div className="grid grid-cols-2 space-x-1">
         <FriendSearchButton />
         <FriendInvitationButton />
+        <Button onClick={() => testMutation.mutate({userId: 1})}>Click</Button>
       </div>
       <hr />
       {tab === Tab.Chats ? <ChatroomList /> : <FriendList />}

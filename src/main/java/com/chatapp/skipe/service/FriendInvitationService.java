@@ -29,8 +29,8 @@ public class FriendInvitationService {
         friendInvitationRepository.delete(invt);
 
         // Create 2 friend entity. One is for the user accepting and another is for the user accepted
-        User accepting = userRepository.getReferenceById(invt.getSender().getId());
-        User accepted = userRepository.getReferenceById(invt.getReceiver().getId());
+        User accepting = userRepository.getReferenceById(invt.getReceiver().getId());
+        User accepted = userRepository.getReferenceById(invt.getSender().getId());
         Friend f_accepting = new Friend();
         f_accepting.setUser(accepting);
         f_accepting.setFriend(accepted);

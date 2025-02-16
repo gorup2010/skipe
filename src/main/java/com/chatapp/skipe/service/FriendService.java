@@ -28,6 +28,7 @@ public class FriendService {
         User u = userRepository.findById(user.getId()).get();
 
         List<UserDto> friends = u.getFriends().stream()
+            .sorted((f1, f2) -> f2.getCreatedAt().compareTo(f1.getCreatedAt()))     // Sort in descending order of createdAt
             .map(friend -> UserDto.fromModel(friend.getFriend()))
             .toList();
 

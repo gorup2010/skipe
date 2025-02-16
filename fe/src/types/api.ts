@@ -35,3 +35,17 @@ export type Message = {
   sender: number;
   createdAt: string;
 }
+
+export type Notication = {
+  type?: "NEW_FRIEND" | "NEW_FRIEND_INVITATION"
+}
+
+export type Chatroom = {
+  id: number;
+  name: string;
+  avatar: string;
+  isGroupChat: boolean;
+  lastMsg: string;
+  lastModifyAt: string;
+  lastModifyUser: string;
+}

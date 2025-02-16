@@ -8,7 +8,7 @@ export const create = ({
 }: {  // Declare the parameter type directly without adding an extra type for this API
   userId: number;
 }): Promise<void> => {
-  return api.post("friend-invitations", { userId });
+  return api.post("test", { userId });
 };
 
 // Add a mutationConfig so that we can provide onSuccess callback to the hook
@@ -31,7 +31,7 @@ export const useX = ({
     },
     ...restConfig,
     onSuccess: (...args) => {
-      queryClient.invalidateQueries();
+      //queryClient.invalidateQueries();
       onSuccess?.(...args)
     },
   });

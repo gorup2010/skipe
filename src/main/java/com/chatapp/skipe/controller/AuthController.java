@@ -4,10 +4,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.config.WebSocketMessageBrokerStats;
 
 import com.chatapp.skipe.dto.AuthResponse;
+import com.chatapp.skipe.dto.ChatroomDto;
 import com.chatapp.skipe.dto.LoginRequest;
+import com.chatapp.skipe.dto.NotificationDto;
 import com.chatapp.skipe.dto.RegisterRequest;
 import com.chatapp.skipe.dto.UserDto;
+import com.chatapp.skipe.dto.enumeration.NotificationType;
 import com.chatapp.skipe.entity.User;
+import com.chatapp.skipe.repository.ChatroomRepository;
 import com.chatapp.skipe.repository.FriendInvitationRepository;
 import com.chatapp.skipe.repository.UserRepository;
 import com.chatapp.skipe.service.FriendService;
@@ -18,6 +22,7 @@ import lombok.AllArgsConstructor;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +35,8 @@ public class AuthController {
     FriendInvitationRepository friendInvitationRepository;
     FriendService friendService;
     UserRepository userRepository;
-    WebSocketMessageBrokerStats stats;
+    SimpMessagingTemplate template;
+    ChatroomRepository chatroomRepository;
 
     // Note that if authentication is fail, Spring return 403.
     // Because currently the "error" endpoint isn't in the list in requestMatchers.
@@ -45,10 +51,8 @@ public class AuthController {
     }
 
     @GetMapping("/test")
-    public ResponseEntity<List<UserDto>> getFriendInvitation() {
-        User u = userRepository.findById(3).get();
-        List<UserDto> res = friendService.getFriends(u);
-        return ResponseEntity.ok(res);
+    public ResponseEntity<List<ChatroomDto>> getFriendInvitation() {
+        return ResponseEntity.ok(chatroomRepository.findAllChatroomAndLastMsg("testuser1"));
     }
 
     // Whenever authentication fail, spring boot will redirect users to the "/error" endpoint with respective HTTP method with the request

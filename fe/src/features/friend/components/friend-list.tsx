@@ -18,9 +18,6 @@ const FriendList: FC<FriendListProps> = () => {
     return <div>There is nothing here</div>;
   }
 
-  // const friends: User[] = [];
-  // friendsQuery.data.forEach((value) => friends.push(value));
-
   return (
     <div className="space-y-2">
       {

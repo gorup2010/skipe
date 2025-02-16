@@ -1,19 +1,17 @@
 import { FC, useState } from "react";
-import { Avatar } from "@/components/ui/image";
+import { Avatar } from "flowbite-react";
+import { Chatroom } from "@/types/api";
+import { displayFull } from "@/utils/format-time";
 
 type ChatroomCardProps = {
-  id: string;
-  username: string;
-  lastMessage: string;
-  lastDate: Date;
+  chatroom: Chatroom;
 };
 
 const ChatroomCard: FC<ChatroomCardProps> = ({
-  id,
-  username,
-  lastMessage,
-  lastDate,
+  chatroom
 }) => {
+
+  const { name, avatar, lastModifyAt, lastModifyUser, lastMsg, isGroupChat } = chatroom;
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -23,16 +21,16 @@ const ChatroomCard: FC<ChatroomCardProps> = ({
     <div className={"relative flex items-center gap-4 py-4 px-2 rounded " + bgColor}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}>
-      <Avatar placeholder="US" />
+        <Avatar img={avatar} alt={name.slice(0,2)} rounded />
 
       <div className="flex-1 overflow-hidden pr-16">
         {/* Added right padding to prevent text from going under the date */}
-        <div className="font-normal">{username}</div>
-        <div className="text-gray-500 text-sm truncate w-full">{lastMessage}</div>
+        <div className="font-normal">{name}</div>
+        <div className="text-gray-500 text-sm truncate w-full">{isGroupChat ? lastModifyUser + ": " + lastMsg : lastMsg}</div>
       </div>
 
       <div className="absolute top-4 right-1 text-xs text-gray-500">
-        {lastDate.toDateString()}
+        {displayFull(lastModifyAt)}
       </div>
     </div>
   );

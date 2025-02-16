@@ -19,6 +19,7 @@ public class Message {
     Integer id;
     Integer chatroom;
     Integer sender;
+    String senderName;
     String content;
     ZonedDateTime createdAt;
     Boolean isDeleted;

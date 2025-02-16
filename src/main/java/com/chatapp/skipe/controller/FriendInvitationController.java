@@ -4,10 +4,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chatapp.skipe.dto.FriendInvitationGetDto;
 import com.chatapp.skipe.dto.FriendInvitationPostDto;
+import com.chatapp.skipe.dto.NotificationDto;
+import com.chatapp.skipe.dto.enumeration.NotificationType;
 import com.chatapp.skipe.entity.FriendInvitation;
 import com.chatapp.skipe.entity.User;
 import com.chatapp.skipe.repository.FriendInvitationRepository;
-import com.chatapp.skipe.repository.FriendRepository;
 import com.chatapp.skipe.repository.UserRepository;
 import com.chatapp.skipe.service.FriendInvitationService;
 
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -39,8 +39,8 @@ public class FriendInvitationController {
     @GetMapping()
     public ResponseEntity<FriendInvitationGetDto> getFriendInvitation(
             @AuthenticationPrincipal User user) {
-        List<FriendInvitation> sentInvitation = friendInvitationRepository.findAllBySender(user);
-        List<FriendInvitation> receivedInvitation = friendInvitationRepository.findAllByReceiver(user);
+        List<FriendInvitation> sentInvitation = friendInvitationRepository.findAllBySenderOrderByCreatedAtDesc(user);
+        List<FriendInvitation> receivedInvitation = friendInvitationRepository.findAllByReceiverOrderByCreatedAtDesc(user);
         FriendInvitationGetDto res = FriendInvitationGetDto.fromModel(sentInvitation, receivedInvitation);
         return ResponseEntity.ok(res);
     }
@@ -52,8 +52,7 @@ public class FriendInvitationController {
                 .receiver(userRepository.getReferenceById(dto.userId()))
                 .build();
         friendInvitationRepository.save(invt);
-        System.out.println("/queue/" + dto.userId() + "/new-friend-invitation");
-        template.convertAndSend("/queue/" + dto.userId() + "/new-friend-invitation", "new-friend-invitation");
+        template.convertAndSend("/queue/" + dto.userId(), new NotificationDto(NotificationType.NEW_FRIEND_INVITATION));
         return ResponseEntity.noContent().build();
     }
 
@@ -66,8 +65,8 @@ public class FriendInvitationController {
     @PostMapping("{invitationId}/accept")
     public ResponseEntity<Void> acceptFriendInvitation(@PathVariable Integer invitationId) {
         User acceptedUser = friendInvitationService.acceptFriendInvitation(invitationId);
-        template.convertAndSend("/queue/" + acceptedUser.getId() + "/new-friend", "new-friend");
+        System.out.println(acceptedUser.getId());
+        template.convertAndSend("/queue/" + acceptedUser.getId(), new NotificationDto(NotificationType.NEW_FRIEND));
         return ResponseEntity.noContent().build();
     }
-
 }
