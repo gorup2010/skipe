@@ -5,6 +5,7 @@ import org.springframework.web.socket.config.WebSocketMessageBrokerStats;
 
 import com.chatapp.skipe.dto.AuthResponse;
 import com.chatapp.skipe.dto.ChatroomDto;
+import com.chatapp.skipe.dto.ChatroomQueryResult;
 import com.chatapp.skipe.dto.LoginRequest;
 import com.chatapp.skipe.dto.NotificationDto;
 import com.chatapp.skipe.dto.RegisterRequest;
@@ -19,6 +20,8 @@ import com.chatapp.skipe.service.UserService;
 
 import lombok.AllArgsConstructor;
 
+import java.security.Principal;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -51,8 +54,20 @@ public class AuthController {
     }
 
     @GetMapping("/test")
-    public ResponseEntity<List<ChatroomDto>> getFriendInvitation() {
-        return ResponseEntity.ok(chatroomRepository.findAllChatroomAndLastMsg("testuser1"));
+    public ResponseEntity<List<ChatroomDto>> getChatrooms() {
+        List<ChatroomQueryResult> queryData = chatroomRepository.findAllChatroomAndLastMsg("testuser1");
+
+        LinkedList<ChatroomDto> dtos = new LinkedList<>();
+        for (ChatroomQueryResult row : queryData) {
+            if (dtos.isEmpty() || !dtos.getLast().id().equals(row.id())) {
+                dtos.addLast(ChatroomDto.fromModel(row));
+            }
+            else {
+                dtos.getLast().members().addLast(row.user());
+            }
+        }
+
+        return ResponseEntity.ok(dtos);
     }
 
     // Whenever authentication fail, spring boot will redirect users to the "/error" endpoint with respective HTTP method with the request

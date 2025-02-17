@@ -15,7 +15,7 @@ const ChatroomList: FC = () => {
   }
 
   return (
-    <div className="flex flex-col-reverse">
+    <div className="flex flex-col">
       {
         chatroomsQuery.data.map(value => (
           <ChatroomCard key={value.id} chatroom={value} />

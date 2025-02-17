@@ -48,4 +48,5 @@ export type Chatroom = {
   lastMsg: string;
   lastModifyAt: string;
   lastModifyUser: string;
+  members: User[];
 }
