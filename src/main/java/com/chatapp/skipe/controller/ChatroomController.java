@@ -11,12 +11,15 @@ import org.springframework.stereotype.Controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.chatapp.skipe.dto.ChatroomDto;
 import com.chatapp.skipe.dto.ChatroomQueryResult;
+import com.chatapp.skipe.entity.Message;
 import com.chatapp.skipe.repository.ChatroomRepository;
+import com.chatapp.skipe.repository.MessageRepository;
 
 
 @Controller
@@ -25,6 +28,7 @@ import com.chatapp.skipe.repository.ChatroomRepository;
 public class ChatroomController {
     
     ChatroomRepository chatroomRepository;
+    MessageRepository messageRepository;
 
     @GetMapping()
     public ResponseEntity<List<ChatroomDto>> getChatrooms(Principal principal) {
@@ -41,5 +45,10 @@ public class ChatroomController {
         }
 
         return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("{chatroomId}/messages")
+    public ResponseEntity<List<Message>> getMessages(@PathVariable Integer chatroomId) {
+        return ResponseEntity.ok(messageRepository.findByChatroom(chatroomId));
     }
 }

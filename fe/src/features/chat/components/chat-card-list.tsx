@@ -1,16 +1,34 @@
-import { FC, useContext } from "react";
+import { FC, useContext, useEffect, useRef } from "react";
 import { ChatCard } from "./chat-card";
-import { AppContext } from "@/app/provider";
+import { ChatContext } from "../provider";
+import { getAuth } from "@/lib/auth";
 
 const ChatCardList: FC = () => {
 
-  const appContext = useContext(AppContext);
+  const auth = getAuth();
+  const chatContext = useContext(ChatContext);
+  const contentField = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    if (contentField.current != null) {
+      contentField.current.scrollTop = contentField.current.scrollHeight;
+    }
+    else {
+      console.log("Content Field is null");
+    }
+  };
+
+  useEffect(() => {
+    if (contentField) {
+      scrollToBottom();
+    }
+  })
 
   return (
-    <div className="my-3 overflow-y-auto no-scrollbar max-h-[79vh] min-h-[79vh] flex flex-col space-y-2">
-      <ChatCard key={-1} message="Hiii" isUser={true} createdAt={new Date()} />
+    <div ref={contentField} className="my-3 overflow-y-auto no-scrollbar max-h-[79vh] min-h-[79vh] flex flex-col space-y-2">
+      <ChatCard key={-1} message="Hiii" isUser={true} createdAt={""} />
       {
-        appContext?.messages.map((msg, index) => <ChatCard key={index} message={msg.content} isUser={msg.sender === 1} createdAt={msg.createdAt} />)
+        chatContext?.currentMessages.map((msg) => <ChatCard key={msg.id} message={msg.content} isUser={msg.sender === auth?.user.id} createdAt={msg.createdAt} />)
       }
     </div>
   );

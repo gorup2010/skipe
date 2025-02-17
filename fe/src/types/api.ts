@@ -31,6 +31,8 @@ export type AuthResponse = {
 };
 
 export type Message = {
+  id: number;
+  chatroom: number;
   content: string;
   sender: number;
   createdAt: string;

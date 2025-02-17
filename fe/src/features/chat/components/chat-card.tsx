@@ -1,9 +1,9 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 
 type ChatCardProps = {
   isUser: boolean;
   message: string;
-  createdAt: Date;
+  createdAt: string;
 };
 
 const ChatCard: FC<ChatCardProps> = ({ isUser, message, createdAt }) => {
@@ -25,7 +25,7 @@ const ChatCard: FC<ChatCardProps> = ({ isUser, message, createdAt }) => {
         <p className=" text-gray-900 font-normal overflowWrap">
           {message + ""}
         </p>
-        <p className="font-extralight text-xs">{createdAt.toDateString()}</p>
+        <p className="font-extralight text-xs">{createdAt}</p>
       </div>
     </div>
   );

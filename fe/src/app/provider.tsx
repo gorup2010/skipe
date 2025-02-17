@@ -1,10 +1,8 @@
-import { Message, Notication } from "@/types/api";
+import { Notication } from "@/types/api";
 import {
   createContext,
-  Dispatch,
   FC,
   ReactNode,
-  SetStateAction,
   useCallback,
   useEffect,
   useMemo,
@@ -23,8 +21,6 @@ interface AppProviderProps {
 
 interface AppContextType {
   client: Client | undefined;
-  messages: Message[];
-  setMessages: Dispatch<SetStateAction<Message[]>>;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -44,9 +40,6 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
 
   // TODO: convert to useRef
   const [client, setClient] = useState<Client | undefined>(undefined);
-  const [messages, setMessages] = useState<Message[]>([
-    { content: "Hello", sender: 2, createdAt: new Date() },
-  ]);
   const [error, setError] = useState(false);
 
   const disconnect = useCallback(() => {
@@ -61,15 +54,9 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
     client.onConnect = () => {
       const user = getAuth()?.user;
 
-      client.subscribe("/topic/test", (message: IMessage) => {
-        console.log("Message received from server:", message.body);
-        const newMsg: Message = {
-          content: message.body || "",
-          sender: 2,
-          createdAt: "new Date()",
-        };
-        setMessages((prevMessages) => [...prevMessages, newMsg]);
-      });
+      // client.subscribe("/topic/test", (message: IMessage) => {
+      //    console.log("Message received from server:", message.body);
+      // });
 
       client.subscribe(`/queue/${user?.id}`, (message: IMessage) => {
         const notification : Notication = JSON.parse(message.body);
@@ -106,7 +93,6 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
     if (client == null) {
       connectWebSocket();
     }
-
     // Cleanup function to close the socket
     return disconnect;
   }, [client, disconnect]);
@@ -114,10 +100,8 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   const contextValue = useMemo(
     () => ({
       client,
-      messages,
-      setMessages,
     }),
-    [client, messages]
+    [client]
   );
 
   if (error) {
@@ -126,7 +110,6 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
     return <ConnectionFail retryConnection={retryConnection} />;
   }
 
-  // Provide the authentication context to the children components
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
   );
