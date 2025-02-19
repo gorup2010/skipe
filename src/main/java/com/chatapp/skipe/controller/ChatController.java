@@ -17,17 +17,9 @@ public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
     private final MessageService messageService;
 
-    @MessageMapping("/chat")
+    @MessageMapping("/chat/{chatroomId}")
     @SendTo("/topic/test")
     public String processMessage(@Payload String chatMessage) {
-        // Add some delay
-        try {
-            Thread.sleep(1000);
-
-        } catch (Exception e) {
-            System.out.println("Error at chat");
-        }
-
         // Save into database
         //messageService.save(chatMessage);
 

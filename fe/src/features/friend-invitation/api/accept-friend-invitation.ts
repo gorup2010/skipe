@@ -10,7 +10,9 @@ export const acceptInvitation = ({
   invitationId: number | undefined;
 }): Promise<void> => {
   if (invitationId == undefined) throw new Error();
-  return api.post(`friend-invitations/${invitationId}/accept`, { invitationId });
+  return api.post(`friend-invitations/${invitationId}/accept`, {
+    invitationId,
+  });
 };
 
 type Options = {
@@ -30,10 +32,10 @@ export const useAcceptFriendInvitation = ({ mutationConfig }: Options = {}) => {
     ...restConfig,
     onSuccess: (...args) => {
       queryClient.invalidateQueries({
-        queryKey: [
-          getFriendInvitationsQueryOptions().queryKey,
-          getFriendsQueryOptions().queryKey,
-        ],
+        queryKey: getFriendInvitationsQueryOptions().queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: getFriendsQueryOptions().queryKey,
       });
       onSuccess?.(...args);
     },

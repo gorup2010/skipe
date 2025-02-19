@@ -65,7 +65,6 @@ public class FriendInvitationController {
     @PostMapping("{invitationId}/accept")
     public ResponseEntity<Void> acceptFriendInvitation(@PathVariable Integer invitationId) {
         User acceptedUser = friendInvitationService.acceptFriendInvitation(invitationId);
-        System.out.println(acceptedUser.getId());
         template.convertAndSend("/queue/" + acceptedUser.getId(), new NotificationDto(NotificationType.NEW_FRIEND));
         return ResponseEntity.noContent().build();
     }

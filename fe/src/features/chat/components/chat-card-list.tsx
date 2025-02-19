@@ -26,7 +26,6 @@ const ChatCardList: FC = () => {
 
   return (
     <div ref={contentField} className="my-3 overflow-y-auto no-scrollbar max-h-[79vh] min-h-[79vh] flex flex-col space-y-2">
-      <ChatCard key={-1} message="Hiii" isUser={true} createdAt={""} />
       {
         chatContext?.currentMessages.map((msg) => <ChatCard key={msg.id} message={msg.content} isUser={msg.sender === auth?.user.id} createdAt={msg.createdAt} />)
       }

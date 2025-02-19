@@ -15,23 +15,24 @@ import com.chatapp.skipe.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
 
-
 @Service
 @AllArgsConstructor
 public class FriendService {
     FriendRepository friendRepository;
     UserRepository userRepository;
 
-    public List<UserDto> getFriends(User user) {
-        // Need to fetch again to fix LazyInitializationException: 
-        // failed to lazily initialize a collection of roles, could not initialize proxy - no Session
-        User u = userRepository.findById(user.getId()).get();
+    // public List<UserDto> getFriends(User user) {
+    // // Need to fetch again to fix LazyInitializationException:
+    // // failed to lazily initialize a collection of roles, could not initialize
+    // proxy - no Session
+    // User u = userRepository.findById(user.getId()).get();
 
-        List<UserDto> friends = u.getFriends().stream()
-            .sorted((f1, f2) -> f2.getCreatedAt().compareTo(f1.getCreatedAt()))     // Sort in descending order of createdAt
-            .map(friend -> UserDto.fromModel(friend.getFriend()))
-            .toList();
+    // List<UserDto> friends = u.getFriends().stream()
+    // .sorted((f1, f2) -> f2.getCreatedAt().compareTo(f1.getCreatedAt())) // Sort
+    // in descending order of createdAt
+    // .map(friend -> UserDto.fromModel(friend.getFriend()))
+    // .toList();
 
-        return friends;
-    }
+    // return friends;
+    // }
 }

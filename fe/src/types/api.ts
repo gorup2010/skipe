@@ -6,11 +6,17 @@ export type Account = {
   avatar: string;
 };
 
-// Information of the other users like friends, searched users,...
 export type User = {
   id: number;
   username: string;
   avatar: string;
+}
+
+export type Friend = {
+  id: number;
+  username: string;
+  avatar: string;
+  chatroom: number;
 }
 
 export type FriendInvitation = {

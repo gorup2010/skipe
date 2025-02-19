@@ -8,12 +8,14 @@ import { ChatroomList } from "@/features/chat/components/chatroom-list";
 import { FriendList } from "@/features/friend/components/friend-list";
 import { FriendInvitationButton } from "@/features/friend-invitation/components/friend-invitation-button";
 import { FriendSearchButton } from "@/features/search-user/components/search-user-button";
-import { Avatar } from "@/components/ui/image";
 import { TabIconWrapper } from "@/components/ui/image/tab-icon-wrapper";
-import { Button } from "flowbite-react";
+import { Avatar, Button } from "flowbite-react";
 import { useX } from "@/hooks/mutation";
+import { getAuth } from "@/lib/auth";
 
 export const Sidebar: FC = () => {
+  const auth = getAuth();
+
   // Log out button
   const [isHoverLogout, setIsHoverLogout] = useState(false);
   const logoutStyle = isHoverLogout ? "bg-blue-200" : "";
@@ -33,8 +35,8 @@ export const Sidebar: FC = () => {
   return (
     <div className="w-full h-full p-2 flex flex-col space-y-3">
       <div className="flex items-center w-full">
-        <Avatar placeholder="US" />
-        <span className="text-xl font-semibold ml-5">Username</span>
+        <Avatar aria-placeholder="US" img={auth?.user.avatar} />
+        <span className="text-xl font-semibold ml-5">{auth?.user.username}</span>
         {/**Logout button */}
         <a
           className={

@@ -6,6 +6,7 @@ import org.springframework.web.socket.config.WebSocketMessageBrokerStats;
 import com.chatapp.skipe.dto.AuthResponse;
 import com.chatapp.skipe.dto.ChatroomDto;
 import com.chatapp.skipe.dto.ChatroomQueryResult;
+import com.chatapp.skipe.dto.FriendDto;
 import com.chatapp.skipe.dto.LoginRequest;
 import com.chatapp.skipe.dto.NotificationDto;
 import com.chatapp.skipe.dto.RegisterRequest;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,20 +56,8 @@ public class AuthController {
     }
 
     @GetMapping("/test")
-    public ResponseEntity<List<ChatroomDto>> getChatrooms() {
-        List<ChatroomQueryResult> queryData = chatroomRepository.findAllChatroomAndLastMsg("testuser1");
-
-        LinkedList<ChatroomDto> dtos = new LinkedList<>();
-        for (ChatroomQueryResult row : queryData) {
-            if (dtos.isEmpty() || !dtos.getLast().id().equals(row.id())) {
-                dtos.addLast(ChatroomDto.fromModel(row));
-            }
-            else {
-                dtos.getLast().members().addLast(row.user());
-            }
-        }
-
-        return ResponseEntity.ok(dtos);
+    public ResponseEntity<List<FriendDto>> getFriends() {
+        return ResponseEntity.ok(userRepository.findFriendsOfUser(3));
     }
 
     // Whenever authentication fail, spring boot will redirect users to the "/error" endpoint with respective HTTP method with the request

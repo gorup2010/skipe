@@ -1,14 +1,17 @@
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 import { Avatar } from "flowbite-react";
 import { Chatroom } from "@/types/api";
 import { displayFull } from "@/utils/format-time";
 import { getAuth } from "@/lib/auth";
+import { ChatContext } from "../provider";
 
 type ChatroomCardProps = {
   chatroom: Chatroom;
 };
 
 const ChatroomCard: FC<ChatroomCardProps> = ({ chatroom }) => {
+
+  const chatContext = useContext(ChatContext);
   const account = getAuth();
   const {
     name,
@@ -19,9 +22,11 @@ const ChatroomCard: FC<ChatroomCardProps> = ({ chatroom }) => {
     isGroupChat,
     members,
   } = chatroom;
-  const [isHovered, setIsHovered] = useState(false);
 
-  const bgColor = isHovered ? "bg-blue-200" : "";
+  const [isHovered, setIsHovered] = useState(false);
+  const isSelected = chatContext?.currentChatroom == chatroom.id;
+
+  const bgColor = isSelected ? "bg-blue-200" : isHovered ? "bg-blue-100" : "";
   const chatroomName = isGroupChat
     ? name
     : account?.user.username === members[0].username
@@ -40,6 +45,7 @@ const ChatroomCard: FC<ChatroomCardProps> = ({ chatroom }) => {
       }
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={() => chatContext?.setCurrentChatroom(chatroom.id)}
     >
       <Avatar img={chatroomAvatar} rounded />
 

@@ -22,7 +22,7 @@ const FriendList: FC<FriendListProps> = () => {
     <div className="space-y-2">
       {
         [...friendsQuery.data].map(([, value]) => (
-          <FriendCard key={value.id} avatar={value.avatar} username={value.username}
+          <FriendCard key={value.id} friend={value}
           />
         ))
       }

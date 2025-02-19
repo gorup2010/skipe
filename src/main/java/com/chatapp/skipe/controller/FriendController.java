@@ -24,9 +24,9 @@ public class FriendController {
     FriendRepository friendRepository;
     FriendService friendService;
 
-    @GetMapping()
-    public ResponseEntity<List<UserDto>> getFriends(@AuthenticationPrincipal User user) {
-        List<UserDto> res = friendService.getFriends(user);
-        return ResponseEntity.ok(res);
-    }
+    // @GetMapping()
+    // public ResponseEntity<List<UserDto>> getFriends(@AuthenticationPrincipal User user) {
+    //     List<UserDto> res = friendService.getFriends(user);
+    //     return ResponseEntity.ok(res);
+    // }
 }

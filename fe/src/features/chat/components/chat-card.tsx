@@ -1,3 +1,4 @@
+import { displayFull } from "@/utils/format-time";
 import { FC } from "react";
 
 type ChatCardProps = {
@@ -25,7 +26,7 @@ const ChatCard: FC<ChatCardProps> = ({ isUser, message, createdAt }) => {
         <p className=" text-gray-900 font-normal overflowWrap">
           {message + ""}
         </p>
-        <p className="font-extralight text-xs">{createdAt}</p>
+        <p className="font-extralight text-xs">{displayFull(createdAt)}</p>
       </div>
     </div>
   );

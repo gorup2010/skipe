@@ -1,5 +1,5 @@
 import { AppContext } from "@/app/provider";
-import { Chatroom, Message } from "@/types/api";
+import { Message } from "@/types/api";
 import { IMessage } from "@stomp/stompjs";
 import {
   createContext,
@@ -17,8 +17,8 @@ interface ChatProviderProps {
 }
 
 interface ChatContextType {
-  currentChatroom: Chatroom | undefined;
-  setCurrentChatroom: Dispatch<SetStateAction<Chatroom | undefined>>;
+  currentChatroom: number | undefined;
+  setCurrentChatroom: Dispatch<SetStateAction<number | undefined>>;
   currentMessages: Message[];
   setCurrentMessages: Dispatch<SetStateAction<Message[]>>;
 }
@@ -29,7 +29,7 @@ export const ChatContext = createContext<ChatContextType | undefined>(
 
 export const ChatProvider: FC<ChatProviderProps> = ({ children }) => {
   const [currentChatroom, setCurrentChatroom] = useState<
-    Chatroom | undefined
+    number | undefined
   >();
   const [currentMessages, setCurrentMessages] = useState<Message[]>([]);
 
@@ -44,11 +44,11 @@ export const ChatProvider: FC<ChatProviderProps> = ({ children }) => {
   );
 
   const appContext = useContext(AppContext);
-  if (appContext?.client?.connected && currentChatroom?.id) {
+  if (appContext?.client?.connected && currentChatroom) {
     appContext.client.subscribe(
-      `/topic/${currentChatroom.id}`,
+      `/topic/${currentChatroom}`,
       (message: IMessage) => {
-        console.log(`Message received from ${currentChatroom.id}:`, message.body);
+        console.log(`Message received from ${currentChatroom}:`, message.body);
       }
     );
   }
