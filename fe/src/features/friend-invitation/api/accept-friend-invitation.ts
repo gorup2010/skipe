@@ -3,6 +3,7 @@ import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getFriendInvitationsQueryOptions } from "./get-friend-invitation";
 import { getFriendsQueryOptions } from "@/features/friend/api/get-friends";
+import { getChatroomsQueryOptions } from "@/features/chat/api/get-chatrooms";
 
 export const acceptInvitation = ({
   invitationId,
@@ -36,6 +37,9 @@ export const useAcceptFriendInvitation = ({ mutationConfig }: Options = {}) => {
       });
       queryClient.invalidateQueries({
         queryKey: getFriendsQueryOptions().queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: getChatroomsQueryOptions().queryKey,
       });
       onSuccess?.(...args);
     },

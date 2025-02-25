@@ -14,6 +14,7 @@ import { useX } from "@/hooks/mutation";
 import { getAuth } from "@/lib/auth";
 
 export const Sidebar: FC = () => {
+  console.log("Sidebar");
   const auth = getAuth();
 
   // Log out button
@@ -35,7 +36,7 @@ export const Sidebar: FC = () => {
   return (
     <div className="w-full h-full p-2 flex flex-col space-y-3">
       <div className="flex items-center w-full">
-        <Avatar aria-placeholder="US" img={auth?.user.avatar} />
+        <Avatar aria-placeholder="US" img={auth?.user.avatar} rounded/>
         <span className="text-xl font-semibold ml-5">{auth?.user.username}</span>
         {/**Logout button */}
         <a
@@ -73,7 +74,7 @@ export const Sidebar: FC = () => {
       <div className="grid grid-cols-2 space-x-1">
         <FriendSearchButton />
         <FriendInvitationButton />
-        <Button onClick={() => testMutation.mutate({userId: 1})}>Click</Button>
+        <Button onClick={() => console.log("Click")}>Click</Button>
       </div>
       <hr />
       {tab === Tab.Chats ? <ChatroomList /> : <FriendList />}

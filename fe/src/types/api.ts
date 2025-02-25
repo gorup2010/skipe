@@ -44,6 +44,12 @@ export type Message = {
   createdAt: string;
 }
 
+export type SocketMessage = {
+  content: string;
+  senderName: string;
+  sender: number;
+}
+
 export type Notication = {
   type?: "NEW_FRIEND" | "NEW_FRIEND_INVITATION"
 }

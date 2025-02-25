@@ -1,4 +1,4 @@
-import { ChatContext } from "@/features/chat/provider";
+import { ChatroomContext } from "@/features/chat/chatroom-provider";
 import { Friend } from "@/types/api";
 import { Avatar } from "flowbite-react";
 import { FC, useContext, useState } from "react";
@@ -8,7 +8,7 @@ type FriendCardProps = {
 };
 
 const FriendCard: FC<FriendCardProps> = ({ friend }) => {
-  const chatContext = useContext(ChatContext);
+  const chatroomContext = useContext(ChatroomContext);
   const [isHovered, setIsHovered] = useState(false);
 
   const bgColor = isHovered ? "bg-blue-200" : "";
@@ -20,7 +20,7 @@ const FriendCard: FC<FriendCardProps> = ({ friend }) => {
       }
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={() => chatContext?.setCurrentChatroom(friend.chatroom)}
+      onClick={() => chatroomContext?.setCurrentChatroom(friend)}
     >
       <Avatar className="w-15 h-15" img={friend.avatar} rounded />
       <div className="flex-1">{friend.username}</div>

@@ -75,10 +75,15 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
       setError(false);
     };
 
-    client.onDisconnect = () => {
-      console.log("WebSocket disconnect");
+    const errorCallback = () => {
+      client.deactivate();
       setError(true);
     };
+
+    client.onDisconnect = errorCallback;
+    client.onStompError = errorCallback;
+    client.onWebSocketError = errorCallback;
+    client.onWebSocketClose = errorCallback;
 
     client.activate();
     setClient(client);

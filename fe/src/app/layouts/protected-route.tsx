@@ -2,7 +2,7 @@ import { addLogoutListener, getAuth, removeLogoutListener } from "@/lib/auth";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { AppProvider } from "../provider";
 import { useEffect } from "react";
-import { ChatProvider } from "@/features/chat/provider";
+import { ChatroomProvider } from "@/features/chat/chatroom-provider";
 
 export const ProtectedRoute = () => {
   const user = getAuth();
@@ -26,9 +26,9 @@ export const ProtectedRoute = () => {
 
   return (
     <AppProvider>
-      <ChatProvider>
+      <ChatroomProvider>
         <Outlet />
-      </ChatProvider>
+      </ChatroomProvider>
     </AppProvider>
   );
 };

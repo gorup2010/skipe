@@ -1,17 +1,22 @@
-import { FC, useContext, useState } from "react";
+import { FC, Fragment, useContext, useEffect, useState } from "react";
 import { Avatar } from "flowbite-react";
-import { Chatroom } from "@/types/api";
+import { Chatroom, Message } from "@/types/api";
 import { displayFull } from "@/utils/format-time";
 import { getAuth } from "@/lib/auth";
-import { ChatContext } from "../provider";
+import { ChatroomContext } from "../chatroom-provider";
+import { AppContext } from "@/app/provider";
+import { IMessage } from "@stomp/stompjs";
+import { emitNewMessageEvent } from "../new-message-event";
 
 type ChatroomCardProps = {
   chatroom: Chatroom;
+  setChatrooms: React.Dispatch<React.SetStateAction<Chatroom[] | undefined>>;
 };
 
 const ChatroomCard: FC<ChatroomCardProps> = ({ chatroom }) => {
+  const chatroomContext = useContext(ChatroomContext);
+  const appContext = useContext(AppContext);
 
-  const chatContext = useContext(ChatContext);
   const account = getAuth();
   const {
     name,
@@ -24,7 +29,7 @@ const ChatroomCard: FC<ChatroomCardProps> = ({ chatroom }) => {
   } = chatroom;
 
   const [isHovered, setIsHovered] = useState(false);
-  const isSelected = chatContext?.currentChatroom == chatroom.id;
+  const isSelected = chatroomContext?.currentChatroom?.id === chatroom.id;
 
   const bgColor = isSelected ? "bg-blue-200" : isHovered ? "bg-blue-100" : "";
   const chatroomName = isGroupChat
@@ -38,6 +43,33 @@ const ChatroomCard: FC<ChatroomCardProps> = ({ chatroom }) => {
     ? members[1].avatar
     : members[0].avatar;
 
+  useEffect(() => {
+    if (appContext?.client?.connected) {
+      appContext.client.subscribe(
+        `/topic/chat/${chatroom.id}`,
+        (message: IMessage) => {
+          const msg : Message = JSON.parse(message.body);
+          console.log(msg);
+          if (msg === undefined) {
+            console.log("Message received is empty");
+            return;
+          }
+          emitNewMessageEvent(msg);
+        }
+      );
+    }
+
+    return () => {
+      appContext?.client?.unsubscribe(
+        `/topic/chat/${chatroomContext?.currentChatroom?.id}`
+      );
+    };
+  }, []);
+
+  if (lastMsg === null) {
+    return <Fragment></Fragment>
+  }
+
   return (
     <div
       className={
@@ -45,7 +77,7 @@ const ChatroomCard: FC<ChatroomCardProps> = ({ chatroom }) => {
       }
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={() => chatContext?.setCurrentChatroom(chatroom.id)}
+      onClick={() => chatroomContext?.setCurrentChatroom(chatroom)}
     >
       <Avatar img={chatroomAvatar} rounded />
 

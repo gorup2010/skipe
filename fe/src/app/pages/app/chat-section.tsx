@@ -1,32 +1,37 @@
-import { Avatar } from "@/components/ui/image";
-import { ChangeEvent, FC, memo, useContext, useState } from "react";
-import { Paperclip, SendHorizontal } from "lucide-react";
+import { FC, useContext, useEffect, useState } from "react";
 import { ChatCardList } from "@/features/chat/components/chat-card-list";
-import { AppContext } from "@/app/provider";
-import { ChatContext } from "@/features/chat/provider";
+import { ChatroomContext } from "@/features/chat/chatroom-provider";
 import { useMessages } from "@/features/chat/api/get-messages";
+import { Avatar } from "flowbite-react";
+import ChatInput from "./chat-input";
+import { addNewMessageListener, removeNewMessageListener } from "@/features/chat/new-message-event";
+import { Message } from "@/types/api";
 
-const ChatSection: FC = memo(() => {
-  const appContext = useContext(AppContext);
-  const chatContext = useContext(ChatContext);
+const ChatSection: FC = () => {
+  const chatroomContext = useContext(ChatroomContext);
+  const messagesQuery = useMessages(chatroomContext?.currentChatroom?.id);
+  const [messages, setMessages] = useState<Message[]>([]);
 
-  // Input
-  const [content, setContent] = useState<string>("");
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setContent(event.target.value);
-  };
-  const handleSend = () => {
-    if (appContext !== undefined && appContext.client !== undefined) {
-      appContext.client.publish({
-        destination: `/app/chat/${chatContext?.currentChatroom?.id}`,
-        body: content,
-      });
+  useEffect(() => {
+    const handleNewMsg = (message: Message) => {
+      //if (chatroomContext?.currentChatroom === message.body)
+        //console.log("Chatsecion: " + message);
+    };
+
+    addNewMessageListener(handleNewMsg);
+
+    return () => {
+      removeNewMessageListener(handleNewMsg);
+    };
+  }, [chatroomContext?.currentChatroom]);
+
+  useEffect(() => {
+    if (messagesQuery.data !== undefined) {
+      setMessages(messagesQuery.data)
     }
-  };
+  }, [messagesQuery.data])
 
-  const messagesQuery = useMessages(chatContext?.currentChatroom?.id);
-
-  if (chatContext?.currentChatroom === undefined) {
+  if (chatroomContext?.currentChatroom === undefined) {
     return <div className="w-full md:w-3/4 h-full">Not select yet</div>;
   }
 
@@ -34,54 +39,17 @@ const ChatSection: FC = memo(() => {
     return <div className="w-full md:w-3/4 h-full">Is loading</div>;
   }
 
-  if (messagesQuery.data) {
-    chatContext.setCurrentMessages(messagesQuery.data);
-  }
-  else {
-    console.log("messagesQuery.data is empty");
-  }
-
   return (
     <div className="w-full md:w-3/4 h-full">
       <div className="p-3 flex items-center">
-        <Avatar placeholder="US" />
-        <span className="text-xl font-semibold ml-5">Username</span>
+        <Avatar alt={chatroomContext.currentChatroom.name} img={chatroomContext.currentChatroom.avatar} rounded />
+        <span className="text-xl font-semibold ml-5">{chatroomContext.currentChatroom.name}</span>
       </div>
       <hr />
-
-      {/**Chat */}
-      <ChatCardList />
-
-      {/**Input section */}
-      <div className="w-full px-2 flex space-x-1">
-        <button
-          type="button"
-          className="flex items-center justify-center w-10 border-2 rounded-xl border-blue-300 "
-        >
-          <Paperclip color="#66B2FF" />
-        </button>
-        <input
-          type="text"
-          id="text-field"
-          className="border focus:ring-gray-300 focus:outline-none border-blue-300 text-gray-700 text-sm rounded-lg ps-5 p-2.5 flex-1"
-          style={{ whiteSpace: "pre-wrap" }}
-          defaultValue=""
-          ref={null}
-          placeholder="Nội dung..."
-          disabled={false}
-          onChange={handleChange}
-          required
-        />
-        <button
-          type="button"
-          className="flex items-center justify-center w-10 border-2 rounded-xl border-blue-300 "
-          onClick={handleSend}
-        >
-          <SendHorizontal color="#66B2FF" />
-        </button>
-      </div>
+      <ChatCardList messages={messages}/>
+      <ChatInput />
     </div>
   );
-});
+};
 
 export default ChatSection;
