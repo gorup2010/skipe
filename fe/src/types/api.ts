@@ -41,6 +41,7 @@ export type Message = {
   chatroom: number;
   content: string;
   sender: number;
+  senderName: string;
   createdAt: string;
 }
 

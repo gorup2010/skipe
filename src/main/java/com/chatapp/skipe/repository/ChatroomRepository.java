@@ -26,7 +26,7 @@ public interface ChatroomRepository extends JpaRepository<Chatroom, Integer> {
             join ChatroomMember crm on msg.id = crm.chatroom
             join User u on crm.user = u.id
             where number = 1 and u.username != :username
-            order by msg.lastModifyAt desc, msg.id
+            order by msg.lastModifyAt asc, msg.id
      """)
     List<ChatroomQueryResult> findAllChatroomAndLastMsg(@Param("username") String username);
 }

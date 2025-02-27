@@ -11,9 +11,10 @@ import {
 import { ConnectionFail } from "./pages/error/ConnectionFail";
 import { Client, IMessage } from "@stomp/stompjs";
 import { getAuth } from "@/lib/auth";
-import { useQueryClient } from "@tanstack/react-query";
+import { QueryKey, useQueryClient } from "@tanstack/react-query";
 import { getFriendInvitationsQueryOptions } from "@/features/friend-invitation/api/get-friend-invitation";
 import { getFriendsQueryOptions } from "@/features/friend/api/get-friends";
+import { getChatroomsQueryOptions } from "@/features/chat/api/get-chatrooms";
 
 interface AppProviderProps {
   children: ReactNode;
@@ -27,16 +28,11 @@ export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   const queryClient = useQueryClient();
-  const invalidateFriendInvts = () => {
+  const invalidateQuery = (key: QueryKey) => {
     queryClient.invalidateQueries({
-      queryKey: getFriendInvitationsQueryOptions().queryKey,
+      queryKey: key,
     });
-  }
-  const invalidateFriends = () => {
-    queryClient.invalidateQueries({
-      queryKey: getFriendsQueryOptions().queryKey,
-    });
-  }
+  };
 
   // TODO: convert to useRef
   const [client, setClient] = useState<Client | undefined>(undefined);
@@ -62,11 +58,12 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
         const notification : Notication = JSON.parse(message.body);
         switch (notification.type) {
           case "NEW_FRIEND":
-            invalidateFriendInvts();
-            invalidateFriends();
+            invalidateQuery(getFriendInvitationsQueryOptions().queryKey);
+            invalidateQuery(getFriendsQueryOptions().queryKey);
+            invalidateQuery(getChatroomsQueryOptions().queryKey);
             break;
           case "NEW_FRIEND_INVITATION":
-            invalidateFriendInvts();
+            invalidateQuery(getFriendInvitationsQueryOptions().queryKey);
             break;
         }
       })

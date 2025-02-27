@@ -11,7 +11,6 @@ import org.springframework.web.context.request.WebRequest;
 
 import com.chatapp.skipe.dto.ErrorResponse;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 
 @ControllerAdvice

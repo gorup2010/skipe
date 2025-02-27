@@ -9,12 +9,11 @@ import { FriendList } from "@/features/friend/components/friend-list";
 import { FriendInvitationButton } from "@/features/friend-invitation/components/friend-invitation-button";
 import { FriendSearchButton } from "@/features/search-user/components/search-user-button";
 import { TabIconWrapper } from "@/components/ui/image/tab-icon-wrapper";
-import { Avatar, Button } from "flowbite-react";
+import { Avatar } from "flowbite-react";
 import { useX } from "@/hooks/mutation";
 import { getAuth } from "@/lib/auth";
 
 export const Sidebar: FC = () => {
-  console.log("Sidebar");
   const auth = getAuth();
 
   // Log out button
@@ -74,10 +73,11 @@ export const Sidebar: FC = () => {
       <div className="grid grid-cols-2 space-x-1">
         <FriendSearchButton />
         <FriendInvitationButton />
-        <Button onClick={() => console.log("Click")}>Click</Button>
+        {/* <Button onClick={() => console.log("Click")}>Click</Button> */}
       </div>
       <hr />
-      {tab === Tab.Chats ? <ChatroomList /> : <FriendList />}
+      <ChatroomList tab={tab}/>
+      <FriendList tab={tab}/>
     </div>
   );
 };

@@ -7,13 +7,14 @@ import { ChatroomContext } from "../chatroom-provider";
 import { AppContext } from "@/app/provider";
 import { IMessage } from "@stomp/stompjs";
 import { emitNewMessageEvent } from "../new-message-event";
+import { Tab } from "@/types/sidebar";
 
 type ChatroomCardProps = {
   chatroom: Chatroom;
-  setChatrooms: React.Dispatch<React.SetStateAction<Chatroom[] | undefined>>;
+  tab: Tab;
 };
 
-const ChatroomCard: FC<ChatroomCardProps> = ({ chatroom }) => {
+const ChatroomCard: FC<ChatroomCardProps> = ({ chatroom, tab }) => {
   const chatroomContext = useContext(ChatroomContext);
   const appContext = useContext(AppContext);
 
@@ -49,7 +50,6 @@ const ChatroomCard: FC<ChatroomCardProps> = ({ chatroom }) => {
         `/topic/chat/${chatroom.id}`,
         (message: IMessage) => {
           const msg : Message = JSON.parse(message.body);
-          console.log(msg);
           if (msg === undefined) {
             console.log("Message received is empty");
             return;
@@ -61,12 +61,12 @@ const ChatroomCard: FC<ChatroomCardProps> = ({ chatroom }) => {
 
     return () => {
       appContext?.client?.unsubscribe(
-        `/topic/chat/${chatroomContext?.currentChatroom?.id}`
+        `/topic/chat/${chatroom.id}`
       );
     };
   }, []);
 
-  if (lastMsg === null) {
+  if (lastMsg === null || tab !== Tab.Chats) {
     return <Fragment></Fragment>
   }
 
@@ -83,7 +83,7 @@ const ChatroomCard: FC<ChatroomCardProps> = ({ chatroom }) => {
 
       <div className="flex-1 overflow-hidden pr-16">
         {/* Added right padding to prevent text from going under the date */}
-        <div className="font-normal">{chatroomName}</div>
+        <div className="font-light">{chatroomName}</div>
         <div className="text-gray-500 text-sm truncate w-full">
           {lastModifyUser + ": " + lastMsg}
         </div>

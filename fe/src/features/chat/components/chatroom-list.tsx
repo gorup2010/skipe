@@ -4,8 +4,13 @@ import { useChatrooms } from "../api/get-chatrooms";
 import { Spinner } from "flowbite-react";
 import { Chatroom, Message } from "@/types/api";
 import { addNewMessageListener, removeNewMessageListener } from "../new-message-event";
+import { Tab } from "@/types/sidebar";
 
-const ChatroomList: FC = () => {
+interface ChatroomListProp {
+  tab: Tab;
+}
+
+const ChatroomList: FC<ChatroomListProp> = ({tab}) => {
   const chatroomsQuery = useChatrooms();
   const [chatrooms, setChatrooms] = useState<Chatroom[]>();
 
@@ -17,7 +22,21 @@ const ChatroomList: FC = () => {
 
   useEffect(() => {
     const handleNewMsg = (message: Message) => {
-      //console.log("ChatroomList: " + message);
+      const msgChatroom = chatrooms?.find(r => r.id === message.chatroom);
+
+      if (msgChatroom === undefined) {
+        console.log("Chatroom of message isn't exist");
+        return;
+      }
+
+      const updatedChatroom = {...msgChatroom};
+      updatedChatroom.lastMsg = message.content;
+      updatedChatroom.lastModifyUser = message.senderName;
+      updatedChatroom.lastModifyAt = message.createdAt;
+
+      const newChatrooms = chatrooms?.filter(r => r.id !== message.chatroom);
+      newChatrooms?.push(updatedChatroom);
+      setChatrooms(newChatrooms);
     };
 
     addNewMessageListener(handleNewMsg);
@@ -25,7 +44,7 @@ const ChatroomList: FC = () => {
     return () => {
       removeNewMessageListener(handleNewMsg);
     };
-  }, []);
+  }, [chatrooms]);
 
   if (chatroomsQuery.isLoading) {
     return <Spinner />;
@@ -36,9 +55,10 @@ const ChatroomList: FC = () => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col-reverse">
       {chatrooms?.map((value) => (
-        <ChatroomCard key={value.id} chatroom={value} setChatrooms={setChatrooms}/>
+        // Note that ChatroomCard only showed if its lastMsg differ null.
+        <ChatroomCard key={value.id} chatroom={value} tab={tab}/>
       ))}
     </div>
   );

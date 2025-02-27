@@ -1,10 +1,8 @@
 package com.chatapp.skipe.controller;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Stack;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,7 +11,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.chatapp.skipe.dto.ChatroomDto;
 import com.chatapp.skipe.dto.ChatroomQueryResult;

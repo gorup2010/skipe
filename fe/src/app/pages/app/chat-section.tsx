@@ -14,8 +14,9 @@ const ChatSection: FC = () => {
 
   useEffect(() => {
     const handleNewMsg = (message: Message) => {
-      //if (chatroomContext?.currentChatroom === message.body)
-        //console.log("Chatsecion: " + message);
+      if (chatroomContext?.currentChatroom?.id === message.chatroom) {
+        setMessages((prev) => [...prev, message])
+      }
     };
 
     addNewMessageListener(handleNewMsg);

@@ -7,9 +7,7 @@ import com.chatapp.skipe.dto.UserDto;
 import com.chatapp.skipe.entity.User;
 import com.chatapp.skipe.repository.UserRepository;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.security.Principal;
 import java.util.List;

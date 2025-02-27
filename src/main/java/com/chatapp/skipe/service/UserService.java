@@ -11,7 +11,6 @@ import com.chatapp.skipe.dto.AuthResponse;
 import com.chatapp.skipe.dto.LoginRequest;
 import com.chatapp.skipe.dto.RegisterRequest;
 import com.chatapp.skipe.entity.User;
-import com.chatapp.skipe.exception.ForbiddenException;
 import com.chatapp.skipe.repository.UserRepository;
 
 import lombok.AllArgsConstructor;

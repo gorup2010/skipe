@@ -30,7 +30,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             select c.id
             from ChatroomMember crm
             left join Chatroom c on crm.chatroom = c.id
-            where c.isGroupChat = false
+            where c.isGroupChat = false and crm.user = :userId
         )
     """)
     List<FriendDto> findFriendsOfUser(@Param("userId") Integer userId);

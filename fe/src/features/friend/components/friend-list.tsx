@@ -1,13 +1,14 @@
-import { FC } from "react";
+import { FC, Fragment } from "react";
 import { FriendCard } from "./friend-card";
 import { useFriends } from "../api/get-friends";
 import { Spinner } from "flowbite-react";
+import { Tab } from "@/types/sidebar";
 
 type FriendListProps = {
-  isReceived?: boolean;
+  tab: Tab;
 };
 
-const FriendList: FC<FriendListProps> = () => {
+const FriendList: FC<FriendListProps> = ({tab}) => {
   const friendsQuery = useFriends();
 
   if (friendsQuery.isLoading) {
@@ -16,6 +17,10 @@ const FriendList: FC<FriendListProps> = () => {
 
   if (friendsQuery.data == undefined) {
     return <div>There is nothing here</div>;
+  }
+
+  if (tab !== Tab.Contacts) {
+    return <Fragment></Fragment>
   }
 
   return (
