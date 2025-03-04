@@ -27,10 +27,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AuthController {
 
     private UserService userService;
-    FriendInvitationRepository friendInvitationRepository;
-    UserRepository userRepository;
-    SimpMessagingTemplate template;
-    ChatroomRepository chatroomRepository;
 
     // Note that if authentication is fail, Spring return 403.
     // Because currently the "error" endpoint isn't in the list in requestMatchers.
@@ -45,13 +41,14 @@ public class AuthController {
     }
 
     @GetMapping("/test")
-    public ResponseEntity<List<FriendDto>> getFriends() {
-        return ResponseEntity.ok(userRepository.findFriendsOfUser(3));
+    public ResponseEntity<String> getFriends() {
+        return ResponseEntity.ok("Hello");
     }
 
-    // Whenever authentication fail, spring boot will redirect users to the "/error" endpoint with respective HTTP method with the request
+    // Whenever authentication fail, spring boot will redirect users to the "/error"
+    // endpoint with respective HTTP method with the request
     // @PostMapping("error")
     // public ResponseEntity<?> postMethodName(HttpServletRequest request) {
-    //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    // return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     // }
 }
