@@ -4,56 +4,44 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.chatapp.skipe.SkipeApplication;
+import com.chatapp.skipe.configuration.JwtAuthFilter;
 import com.chatapp.skipe.dto.ChatroomQueryResult;
 import com.chatapp.skipe.dto.UserDto;
 import com.chatapp.skipe.entity.Message;
 import com.chatapp.skipe.repository.ChatroomRepository;
 import com.chatapp.skipe.repository.MessageRepository;
-import com.chatapp.skipe.service.CustomUserDetailsService;
-import com.chatapp.skipe.service.JwtService;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.time.ZonedDateTime;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@WebMvcTest(controllers = ChatroomController.class)
-@ContextConfiguration(classes = SkipeApplication.class)
-@AutoConfigureMockMvc
+@WebMvcTest(controllers = ChatroomController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtAuthFilter.class))
+@ContextConfiguration(classes =SkipeApplication.class)
 @WithMockUser(username = "user1")
 class ChatroomControllerTest {
 
     @Autowired
     MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
-
     @MockitoBean
     ChatroomRepository chatroomRepository;
 
     @MockitoBean
     MessageRepository messageRepository;
-
-    @MockitoBean
-    JwtService jwtService;
-
-    @MockitoBean
-    CustomUserDetailsService customUserDetailsService;
 
     private final ZonedDateTime testTime = ZonedDateTime.now();
     private final UserDto user2 = new UserDto(2, "user2", "");

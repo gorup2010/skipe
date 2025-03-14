@@ -40,7 +40,8 @@ public class FriendInvitationController {
     public ResponseEntity<FriendInvitationGetDto> getFriendInvitation(
             @AuthenticationPrincipal User user) {
         List<FriendInvitation> sentInvitation = friendInvitationRepository.findAllBySenderOrderByCreatedAtDesc(user);
-        List<FriendInvitation> receivedInvitation = friendInvitationRepository.findAllByReceiverOrderByCreatedAtDesc(user);
+        List<FriendInvitation> receivedInvitation = friendInvitationRepository
+                .findAllByReceiverOrderByCreatedAtDesc(user);
         FriendInvitationGetDto res = FriendInvitationGetDto.fromModel(sentInvitation, receivedInvitation);
         return ResponseEntity.ok(res);
     }
