@@ -14,9 +14,12 @@ import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+import com.chatapp.skipe.dto.AuthResponse;
+import com.chatapp.skipe.dto.LoginRequest;
 import com.chatapp.skipe.dto.RegisterRequest;
 import com.chatapp.skipe.entity.User;
 import com.chatapp.skipe.repository.UserRepository;
@@ -67,8 +70,16 @@ public class UserServiceTest {
         assertThrows(Exception.class, () -> userService.register(request));
     }
 
-    @Test
-    void testVerify() {
-        
-    }
+    // @Test
+    // void testVerify() {
+    //     LoginRequest request = new LoginRequest("testuser1", "password");
+    //     User user = User.builder().id(1).username("testuser1").email("email").password("encodedPassword")
+    //             .avatar("avatar").build();
+
+    //     when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(user);
+
+    //     AuthResponse actual = userService.verify(request);
+    //     assertEquals(1, actual.user().id());
+    //     assertEquals("testuser1", actual.user().username());
+    // }
 }

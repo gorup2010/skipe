@@ -18,7 +18,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    @Value("${jwt.secretkey}")
+    @Value("${application.jwt.secretkey}")
     private String secretkey;
     private int ONE_DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 

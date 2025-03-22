@@ -1,7 +1,9 @@
 package com.chatapp.skipe.configuration;
 
 import java.util.Arrays;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,6 +36,9 @@ public class WebSecurityConfig {
     private UserDetailsService userDetailsService;
     private JwtAuthFilter jwtAuthFilter;
 
+    @Value("${application.cors.origins}")
+    private List<String> allowedOrigins;
+
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -41,8 +46,9 @@ public class WebSecurityConfig {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
+        System.out.println(allowedOrigins.toString());
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+        configuration.setAllowedOrigins(allowedOrigins);
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS",
                 "DELETE", "PUT", "PATCH")); // Allow all HTTP methods
         configuration.setAllowedHeaders(Arrays.asList("*"));

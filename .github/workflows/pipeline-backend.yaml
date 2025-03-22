@@ -1,0 +1,49 @@
+name: Skipe Backend Pipeline
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+    
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    name: Compile project
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run Maven Build Command
+        run: mvn clean install -DskipTests
+
+      - name: Run Maven Test
+        run: mvn test
+
+      - name: Unit Test Results
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Production-Unit-Test-Results
+          path: target/surefire-reports/*.xml
+          reporter: java-junit
+
+      - name: Run Maven Jacoco
+        run: mvn jacoco:report
+
+      - name: JaCoCo Code Coverage Report
+        id: jacoco_reporter
+        uses: PavanMudigonda/jacoco-reporter@v5.0
+        with:
+          coverage_results_path: 'target/site/jacoco/jacoco.xml'
+          coverage_report_name: Coverage
+          coverage_report_title: JaCoCo
+          github_token: ${{ secrets.GITHUB_TOKEN }}

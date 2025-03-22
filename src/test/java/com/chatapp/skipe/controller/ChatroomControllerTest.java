@@ -30,7 +30,7 @@ import java.time.ZonedDateTime;
 
 
 @WebMvcTest(controllers = ChatroomController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtAuthFilter.class))
-@ContextConfiguration(classes =SkipeApplication.class)
+@ContextConfiguration(classes = SkipeApplication.class)
 @WithMockUser(username = "user1")
 class ChatroomControllerTest {
 
