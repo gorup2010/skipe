@@ -7,8 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SkipeApplication {
 
 	public static void main(String[] args) {
-		System.out.println("App's runnning");
 		SpringApplication.run(SkipeApplication.class, args);
 	}
-
 }

@@ -88,10 +88,6 @@ public class WebSecurityConfig {
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
             throws Exception {
-
-        for (int i = 0; i < 10; i++) { // violation 'Must have at least one statement'
-        
-        }
         return authenticationConfiguration.getAuthenticationManager();
     }
 
