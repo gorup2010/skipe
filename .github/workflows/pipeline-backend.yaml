@@ -3,8 +3,12 @@ name: Skipe Backend Pipeline
 on:
   push:
     branches: [ "master" ]
+    paths-ignore:
+      - 'fe/**'
   pull_request:
     branches: [ "master" ]
+    paths-ignore:
+      - 'fe/**'
   workflow_dispatch:
     
 jobs:
